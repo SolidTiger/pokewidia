@@ -1,65 +1,72 @@
-
-
+function main(){
+    retriveData();
+}
 
 async function retriveData(){
     var nameList = [];
     var HP_list = [];
 
+//Fetching data and storing data
     for(var i = 1; i <= 151; i++){
     
         const responseName = await fetch(" https://pokeapi.co/api/v2/pokemon/"+ i);
         const pokemon = await responseName.json();
 
-
-        //console.log(pokemon.name);
         var tempName = JSON.stringify(pokemon.name).split("\"")[1];
-        var tempHP = JSON.stringify(pokemon.stats[0]).split(",")[0];
+        var tempHP = parseInt(JSON.stringify(pokemon.stats[0]).split(",")[0].split(":")[1]);
 
-        console.log(tempHP);
-        
+        HP_list.push(tempHP);
         nameList.push(tempName);
     }
+    buildChart(HP_list,nameList);
 }
-/*
-     const matrix = [data,nameList];
 
-     var svg = d3.select("svg"),
-         margin = 200,
-         width = svg.attr("width") - margin,
-         height = svg.attr("height") - margin;
- 
-     var xScale = d3.scaleBand().range ([0, width]).padding(0.4),
-         yScale = d3.scaleLinear().range ([height,0]);
+// Building bar chart
+function buildChart(HP_list,nameList){
+    const matrix = [HP_list,nameList];
     
-     var g = svg.append("g").attr("transform","translate(" + 100 + "," + 100 + ")");
+    var margin = {top: 30, right: 30, bottom: 70, left: 60},
+        width = 1700 - margin.left - margin.right;
+        height = 1000  - margin.top - margin.bottom;
 
+
+    var svg = d3.select("#chart")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.bottom + margin.top)
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+ 
+    var xScale = d3.scaleBand().range ([0, width]).padding(0.4);
     xScale.domain(nameList);
-    yScale.domain([0, d3.max(data)]);
 
-    g.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xScale));
+    svg.append("g")
+        .attr("transform", "translate(0," + height  + ")")
+        .call(d3.axisBottom(xScale))     
+        .selectAll("text")
+            .attr("transform","translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
 
+    var yScale = d3.scaleLinear().range ([height,0]);
+ 
+   
+    yScale.domain([0, d3.max(HP_list)]);
 
-    g.append("g")
+    svg.append("g")
     .call(d3.axisLeft(yScale).tickFormat(function(d){
         return d;
-    }).ticks(data.length));
+    }).ticks(d3.max(HP_list)/10));
 
     for (var i = 0; i < nameList.length ;i++){
-        g.selectAll(".bar")
+        svg.selectAll(".bar")
         .data(matrix)
         .enter().append("rect")
         .attr("x", xScale(nameList[i]))
-        .attr("y", yScale(data[i]))
+        .attr("y", yScale(HP_list[i]))
         .attr("width", xScale.bandwidth())
-        .attr("height", height-yScale(data[i]))
-        .attr("fill", "steelblue");        
+        .attr("height", height-yScale(HP_list[i]))
+        .attr("fill", "steelblue")
+        ;        
     }
 }
-*/
 
-
-function test(){
-    retriveData();
-}
