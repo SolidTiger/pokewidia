@@ -10,17 +10,19 @@
 </head>
 <body>
     <header>
+        <img src="Pokewidia_logo.png" width=400><br>
         <a href="index.html" class="button">Home</a>
         <a href="list.html" class="button">List Pokémon</a>
         <a href="radarChart.html" class="button">Radar Chart</a>
         <a href="celinaTest.html" class="button">View HP stats</a>
         <a href="pokemon_select.html" class="button">Explore Pokémon</a>
     </header>
-    <h1 style="position:relative; left:150px; top:2px">HP in descending order</h1>
-    <div id="my_dataviz"></div>
-    <button type="button" class="button" onclick="clear_data()" style="position:relative; left:145px; top:-10px">Clear All</button>
-    <div id="grid"></div>
-
+    <div style="text-align:center">
+        <h1>HP in descending order</h1>
+        <div id="my_dataviz" style="text-align:center"></div>
+        <button type="button" class="button" onclick="clear_data()" style="position:relative; top:-10px">Clear All</button>
+        <div id="grid"></div>
+    </div>
 </body>
 <!--D3.JS & JAVASCRIPT CODE HERE-->
 <!--I have no idea how to structure this in a good way right now-->
@@ -56,7 +58,7 @@
                 img: pokemon.sprites.other.dream_world.front_default
             });
         })
-        initgrid(16, 10, pokemon_data, 151) 
+        initgrid(10, 16, pokemon_data, 151) 
         update(shown_data)
     })
     
@@ -149,7 +151,7 @@
 
         var grid = d3.select("#grid")
         .append("svg")
-        .attr("width","510px")
+        .attr("width","810px")
         .attr("height","810px");
         
         var row = grid.selectAll(".row")
