@@ -48,6 +48,18 @@ body {
     color: white;
 }
 
+.exploreTable {
+    font-family: arial, sans-serif;
+    font-size: 20px;
+    border-collapse: collapse;
+    width: 30%;
+    border: 2px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.expoleTableTd{
+    border: 1px solid #000;
 .bar {
     fill: steelblue;
 }
