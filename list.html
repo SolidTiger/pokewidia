@@ -8,6 +8,7 @@
 
 <body>
     <header>
+        <img src = "Pokewidia_logo.png" width = 400><br>
         <a href="index.html" class="button">Home</a>
         <a href="list.html" class="button">List Pokémon</a>
         <!--<a href="team.html" class="button">Create a team</a>-->
@@ -63,7 +64,7 @@
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
-
+             
         (async () => {
 
             var loading = d3.select('body').append('h2').text('Loading table...')
