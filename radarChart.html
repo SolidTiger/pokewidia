@@ -2,48 +2,70 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <html>
 
+<header>
+	<img src="Pokewidia_logo.png" width=400><br>
+	<a href="index.html" class="button">Home</a>
+	<a href="list.html" class="button">List Pokémon</a>
+	<!--<a href="team.html" class="button">Create a team</a>-->
+	<!--<a href="about.html" class="button">About</a>-->
+	<a href="radarChart.html" class="button">Radar Chart</a>
+	<a href="celinaTest.html" class="button">View HP stats</a>
+	<a href="pokemon_select.html" class="button">Explore Pokémon</a>
+
+</header>
+
 <head>
 	<meta charset="UTF-8">
-	<title>Pokemon Data Example</title>
+	<title>Radar Chart</title>
 </head>
 
 <body>
-	<a href="index.html" class="button">Home</a>
-	<h1>Stats Comparison Example</h1>
-	<h2>Pokemon 1</h2>
-	<div>
-	<select id="pokemonSelect">
-		<option value="">Select a Pokemon</option>
-	</select>
-	<table>
-		<thead>
-			<tr>
-				<th>Stat</th>
-				<th>Value</th>
-			</tr>
-		</thead>
-		<tbody id="pokemonStats">
-		</tbody>
-	</table>
-	</div>
-	<h2>Pokemon 2</h2>
-	<div>
-	<select id="pokemonSelect2">
-		<option value="">Select a Pokemon</option>
-	</select>
-	<table>
-		<thead>
-			<tr>
-				<th>Stat</th>
-				<th>Value</th>
-			</tr>
-		</thead>
-		<tbody id="pokemonStats2">
-		</tbody>
-	</table>
+	<link rel="stylesheet" href="style.css">
+	<!-- <a href="index.html" class="button">Home</a> -->
+
+	<div style="display: flex; justify-content: center;">
+		<h1>Stats Comparison Example</h1>
 	</div>
 
-	<div id="otherGraph"></div>
+	<div style="display: flex; justify-content: center;">
+		<div style="width: 200px"; overflow-y: scroll>
+			<h2>Pokemon 1</h2>
+			<div>
+				<select id="pokemonSelect">
+					<option value="">Select a Pokemon</option>
+				</select>
+				<table>
+					<thead>
+						<tr>
+							<th>Stat</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody id="pokemonStats">
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="radarChart" style="float: left"></div>
+		<div style="width: 200px"; overflow-y: scroll>
+			<h2>Pokemon 2</h2>
+			<div>
+				<select id="pokemonSelect2">
+					<option value="">Select a Pokemon</option>
+				</select>
+				<table>
+					<thead>
+						<tr>
+							<th>Stat</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody id="pokemonStats2">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 
 	<script>
 		let maxHp = 250;
@@ -53,13 +75,12 @@
 		let maxSpecial = 154;
 
 		let allPokemonData = [];
-		let data = [{HP: 0, ATT: 0,	SPD: 0,	SP: 0, DEF: 0}, 
-					{HP: 0, ATT: 0, SPD: 0, SP: 0, DEF: 0}];
-		
+		let data = [];
+
 		const allPokemonUrl = "https://pokeapi.co/api/v2/pokemon?limit=151";
-		
+
 		fetch(allPokemonUrl)
-		.then(response => response.json())
+			.then(response => response.json())
 			.then(data => {
 				const pokemonUrls = data.results.map(result => result.url);
 
@@ -105,17 +126,17 @@
 							pokemonSelect2.add(clonedOption);
 						});
 
-
+						let data = [{HP: 0, ATT: 0, SPD: 0, SP: 0, DEF: 0}, {HP: 0, ATT: 0, SPD: 0, SP: 0, DEF: 0}];
 						pokemonSelect.addEventListener("change", event => {
 							const selectedPokemon = allPokemonData.find(pokemon => pokemon.name === event.target.value);
-							let temp = data[1]; 
-							data = [{
+							<!-- let temp = data[1];  -->
+							data[0] = {
 								HP: selectedPokemon.stats[0].value / maxHp * 100,
 								ATT: selectedPokemon.stats[1].value / maxAttack * 100,
 								SPD: selectedPokemon.stats[5].value / maxSpeed * 100,
 								SP: selectedPokemon.stats[3].value / maxSpecial * 100,
 								DEF: selectedPokemon.stats[2].value / maxDefense * 100
-							}, temp];
+							};
 							updateRadarChart(data);
 							const pokemonStats = document.getElementById("pokemonStats");
 							pokemonStats.innerHTML = "";
@@ -132,11 +153,12 @@
 								row.appendChild(statValue);
 								pokemonStats.appendChild(row);
 							});
-							
+
 						});
 
 						pokemonSelect2.addEventListener("change", event => {
 							const selectedPokemon2 = allPokemonData.find(pokemon => pokemon.name === event.target.value);
+							
 							data[1] = {
 								HP: selectedPokemon2.stats[0].value / maxHp * 100,
 								ATT: selectedPokemon2.stats[1].value / maxAttack * 100,
@@ -160,7 +182,7 @@
 								row.appendChild(statValue);
 								pokemonStats2.appendChild(row);
 							});
-							
+
 						});
 					})
 					.catch(error => console.error(error));
@@ -171,10 +193,10 @@
 	<script>
 		let features = ["HP", "ATT", "SPD", "SP", "DEF"];
 		//generate the data
-		
+
 		let width = 600;
 		let height = 600;
-		let svg = d3.select("body").append("svg")
+		let svg = d3.select("#radarChart").append("svg")
 			.attr("width", width)
 			.attr("height", height);
 
@@ -201,7 +223,7 @@
 				enter => enter.append("text")
 					.attr("class", "ticklabel")
 					.attr("x", width / 2 + 5)
-					.attr("y", d => height / 2 - radialScale(d*20)) //d
+					.attr("y", d => height / 2 - radialScale(d * 20)) //d
 					.text(d => d.toString())
 			);
 
@@ -243,7 +265,7 @@
 					.text(d => d.name)
 			);
 
-		
+
 
 		function getPathCoordinates(data_point) {
 			let coordinates = [];
@@ -257,39 +279,38 @@
 
 		function updateRadarChart(data) {
 			let line = d3.line()
-			  .x(d => d.x)
-			  .y(d => d.y);
-		  
+				.x(d => d.x)
+				.y(d => d.y);
+
 			let colors = ["#ce2312", "#536eb5", "navy"];
-		  
+
 			// JOIN data with existing paths
 			let paths = svg.selectAll("path")
-			  .data(data);
-		  
+				.data(data);
+
 			// UPDATE existing paths
 			paths.attr("d", d => line(getPathCoordinates(d)))
-			  .attr("stroke-width", 3)
-			  .attr("stroke", (_, i) => colors[i])
-			  .attr("fill", (_, i) => colors[i])
-			  .attr("stroke-opacity", 1)
-			  .attr("opacity", 0.5);
-		  
+				.attr("stroke-width", 3)
+				.attr("stroke", (_, i) => colors[i])
+				.attr("fill", (_, i) => colors[i])
+				.attr("stroke-opacity", 1)
+				.attr("opacity", 0.5);
+
 			// ENTER new paths
 			paths.enter().append("path")
-			  .datum(d => getPathCoordinates(d))
-			  .attr("d", line)
-			  .attr("stroke-width", 3)
-			  .attr("stroke", (_, i) => colors[i])
-			  .attr("fill", (_, i) => colors[i])
-			  .attr("stroke-opacity", 1)
-			  .attr("opacity", 0.5);
-		  
+				.datum(d => getPathCoordinates(d))
+				.attr("d", line)
+				.attr("stroke-width", 3)
+				.attr("stroke", (_, i) => colors[i])
+				.attr("fill", (_, i) => colors[i])
+				.attr("stroke-opacity", 1)
+				.attr("opacity", 0.5);
+
 			// EXIT old paths
 			paths.exit().remove();
-		  }
-		  
-		
-		updateRadarChart(data);
+		}
+
+		<!-- updateRadarChart(data); -->
 	</script>
 
 </body>
