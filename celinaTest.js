@@ -37,7 +37,7 @@ async function retriveData(type){
 function buildChart(yData,xData){
     const matrix = [yData,xData];
     
-    var margin = {top: 30, right: 30, bottom: 70, left: 60},
+    var margin = {top: 30, right: 30, bottom: 100, left: 60},
         width = 1000 - margin.left - margin.right;
         height = 750  - margin.top - margin.bottom;
 
@@ -57,6 +57,7 @@ function buildChart(yData,xData){
         .call(d3.axisBottom(xScale))     
         .selectAll("text")
             .attr("transform","translate(-10,0)rotate(-45)")
+            .attr("font-size","20")
             .style("text-anchor", "end");
 
     var yScale = d3.scaleLinear().range ([height,0]);
