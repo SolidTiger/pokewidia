@@ -60,4 +60,20 @@ body {
 
 .expoleTableTd{
     border: 1px solid #000;
+.bar {
+    fill: steelblue;
+}
+
+.buttonTable{
+    width: 10%;
+    float: left;
+}
+
+.btnSize{
+    width: 100%;
+    height: 50px;
+}
+
+.background{
+    background-color: #e6c8ca;
 }
