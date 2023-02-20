@@ -16,7 +16,7 @@
         <a href="celinaTest.html" class="button">View HP stats</a>
         <a href="pokemon_select.html" class="button">Explore Pokémon</a>
     </header>
-    
+
     <h1>Explore the pokémon from generation 1</h1>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/pokeapi-js-wrapper/dist/index.js"></script>
@@ -64,7 +64,6 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-
         (async () => {
 
             var loading = d3.select('body').append('h2').text('Loading table...')
@@ -83,7 +82,7 @@
             
 
             for (let i = 0; i < list_names.length; i++) {
-                pokemon_images[list_names[i].name] = list[list_names[i].name].sprites.front_default
+                pokemon_images[list_names[i].name] = list[list_names[i].name].sprites.other.dream_world.front_default
             }
 
             for (let i = 0; i < list_names.length; i++) {

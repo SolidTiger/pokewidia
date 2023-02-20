@@ -9,12 +9,14 @@ header {
 }
 
 body {
+    color: #000000;
     background-color: #dbe6fa;
     font-family: Calibri;
     margin : 0px 0px 0px 0px;
 }
 
 .main1 {
+    color: #dbe6fa;
     padding: 30px;
     text-align: left;
     font-size: 20px;
@@ -22,6 +24,7 @@ body {
 }
 
 .main2 {
+    color: #0c0e14;
     padding: 30px;
     text-align: left;
     font-size: 20px;
@@ -38,7 +41,7 @@ body {
   display: inline-block;
   font-size: 20px;
   width: 208px;
-  margin: 0px 0px 0px 0px; 
+  margin: 10px 10px 0px 0px; 
   transition-duration: 0.4s;
 }
 
@@ -64,7 +67,7 @@ body {
 }
 
 .expoleTableTd{
-    border: 1px solid #000;
+    border: 1px solid #0c0e14;
 }
 
 .bar {
