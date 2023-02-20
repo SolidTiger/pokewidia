@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Pokemon Data Example</title>
+</head>
+
+<body>
+	<a href="index.html" class="button">Home</a>
+	<h1>Stats Comparison Example</h1>
+	<h2>Pokemon 1</h2>
+	<div>
+	<select id="pokemonSelect">
+		<option value="">Select a Pokemon</option>
+	</select>
+	<table>
+		<thead>
+			<tr>
+				<th>Stat</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody id="pokemonStats">
+		</tbody>
+	</table>
+	</div>
+	<h2>Pokemon 2</h2>
+	<div>
+	<select id="pokemonSelect2">
+		<option value="">Select a Pokemon</option>
+	</select>
+	<table>
+		<thead>
+			<tr>
+				<th>Stat</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody id="pokemonStats2">
+		</tbody>
+	</table>
+	</div>
+
+	<div id="otherGraph"></div>
+
+	<script>
+		let maxHp = 250;
+		let maxAttack = 134;
+		let maxDefense = 180;
+		let maxSpeed = 150; //140 ??
+		let maxSpecial = 154;
+
+		let allPokemonData = [];
+		let data = [{HP: 0, ATT: 0,	SPD: 0,	SP: 0, DEF: 0}, 
+					{HP: 0, ATT: 0, SPD: 0, SP: 0, DEF: 0}];
+		
+		const allPokemonUrl = "https://pokeapi.co/api/v2/pokemon?limit=151";
+		
+		fetch(allPokemonUrl)
+		.then(response => response.json())
+			.then(data => {
+				const pokemonUrls = data.results.map(result => result.url);
+
+				const pokemonPromises = pokemonUrls.map(url => fetch(url).then(response => response.json()));
+
+				Promise.all(pokemonPromises)
+					.then(pokemonData => {
+						allPokemonData = pokemonData.map(pokemon => ({
+							name: pokemon.name,
+							id: pokemon.id,
+							types: pokemon.types.map(type => type.type.name),
+							stats: pokemon.stats.map(stat => ({
+								name: stat.stat.name,
+								value: stat.base_stat
+							})),
+							hp: pokemon.stats.find(stat => stat.stat.name === "hp").base_stat,
+							attack: pokemon.stats.find(stat => stat.stat.name === "attack").base_stat,
+							defense: pokemon.stats.find(stat => stat.stat.name === "defense").base_stat,
+							speed: pokemon.stats.find(stat => stat.stat.name === "speed").base_stat,
+							specialAttack: pokemon.stats.find(stat => stat.stat.name === "special-attack").base_stat,
+							sprite: pokemon.sprites.front_default
+						}));
+						// Get the first dropdown list element
+						const pokemonSelect = document.getElementById("pokemonSelect");
+
+						// Get the second dropdown list element
+						const pokemonSelect2 = document.getElementById("pokemonSelect2");
+
+						// Loop through the pokemon data and add options to both dropdown lists
+						allPokemonData.forEach(pokemon => {
+							// Create a new option element
+							const option = document.createElement("option");
+
+							// Set the value and text of the option element
+							option.value = pokemon.name;
+							option.text = pokemon.name;
+
+							// Add the option to the first dropdown list
+							pokemonSelect.add(option);
+
+							// Clone the option element and add it to the second dropdown list
+							const clonedOption = option.cloneNode(true);
+							pokemonSelect2.add(clonedOption);
+						});
+
+
+						pokemonSelect.addEventListener("change", event => {
+							const selectedPokemon = allPokemonData.find(pokemon => pokemon.name === event.target.value);
+							let temp = data[1]; 
+							data = [{
+								HP: selectedPokemon.stats[0].value / maxHp * 100,
+								ATT: selectedPokemon.stats[1].value / maxAttack * 100,
+								SPD: selectedPokemon.stats[5].value / maxSpeed * 100,
+								SP: selectedPokemon.stats[3].value / maxSpecial * 100,
+								DEF: selectedPokemon.stats[2].value / maxDefense * 100
+							}, temp];
+							updateRadarChart(data);
+							const pokemonStats = document.getElementById("pokemonStats");
+							pokemonStats.innerHTML = "";
+							Object.entries(selectedPokemon).forEach(([key, value]) => {
+								if (["name", "stats", "sprite"].includes(key)) {
+									return;
+								}
+								const row = document.createElement("tr");
+								const statName = document.createElement("td");
+								statName.textContent = key;
+								const statValue = document.createElement("td");
+								statValue.textContent = value;
+								row.appendChild(statName);
+								row.appendChild(statValue);
+								pokemonStats.appendChild(row);
+							});
+							
+						});
+
+						pokemonSelect2.addEventListener("change", event => {
+							const selectedPokemon2 = allPokemonData.find(pokemon => pokemon.name === event.target.value);
+							data[1] = {
+								HP: selectedPokemon2.stats[0].value / maxHp * 100,
+								ATT: selectedPokemon2.stats[1].value / maxAttack * 100,
+								SPD: selectedPokemon2.stats[5].value / maxSpeed * 100,
+								SP: selectedPokemon2.stats[3].value / maxSpecial * 100,
+								DEF: selectedPokemon2.stats[2].value / maxDefense * 100
+							};
+							updateRadarChart(data);
+							const pokemonStats2 = document.getElementById("pokemonStats2");
+							pokemonStats2.innerHTML = "";
+							Object.entries(selectedPokemon2).forEach(([key, value]) => {
+								if (["name", "stats", "sprite"].includes(key)) {
+									return;
+								}
+								const row = document.createElement("tr");
+								const statName = document.createElement("td");
+								statName.textContent = key;
+								const statValue = document.createElement("td");
+								statValue.textContent = value;
+								row.appendChild(statName);
+								row.appendChild(statValue);
+								pokemonStats2.appendChild(row);
+							});
+							
+						});
+					})
+					.catch(error => console.error(error));
+			})
+			.catch(error => console.error(error));
+	</script>
+
+	<script>
+		let features = ["HP", "ATT", "SPD", "SP", "DEF"];
+		//generate the data
+		
+		let width = 600;
+		let height = 600;
+		let svg = d3.select("body").append("svg")
+			.attr("width", width)
+			.attr("height", height);
+
+		let radialScale = d3.scaleLinear()
+			.domain([0, 100])
+			.range([0, 100]);
+		let ticks = [20, 40, 60, 80, 100];
+		let ticks2 = [1, 2, 3, 4, 5];
+
+		svg.selectAll("circle")
+			.data(ticks)
+			.join(
+				enter => enter.append("circle")
+					.attr("cx", width / 2)
+					.attr("cy", height / 2)
+					.attr("fill", "none")
+					.attr("stroke", "gray")
+					.attr("r", d => radialScale(d))
+			);
+
+		svg.selectAll(".ticklabel")
+			.data(ticks2)
+			.join(
+				enter => enter.append("text")
+					.attr("class", "ticklabel")
+					.attr("x", width / 2 + 5)
+					.attr("y", d => height / 2 - radialScale(d*20)) //d
+					.text(d => d.toString())
+			);
+
+		function angleToCoordinate(angle, value) {
+			let x = Math.cos(angle) * radialScale(value);
+			let y = Math.sin(angle) * radialScale(value);
+			return { "x": width / 2 + x, "y": height / 2 - y };
+		}
+
+		let featureData = features.map((f, i) => {
+			let angle = (Math.PI / 2) + (2 * Math.PI * i / features.length);
+			return {
+				"name": f,
+				"angle": angle,
+				"line_coord": angleToCoordinate(angle, 100),
+				"label_coord": angleToCoordinate(angle, 140)
+			};
+		});
+
+		// draw axis line
+		svg.selectAll("line")
+			.data(featureData)
+			.join(
+				enter => enter.append("line")
+					.attr("x1", width / 2)
+					.attr("y1", height / 2)
+					.attr("x2", d => d.line_coord.x)
+					.attr("y2", d => d.line_coord.y)
+					.attr("stroke", "black")
+			);
+
+		// draw axis label
+		svg.selectAll(".axislabel")
+			.data(featureData)
+			.join(
+				enter => enter.append("text")
+					.attr("x", d => d.label_coord.x)
+					.attr("y", d => d.label_coord.y)
+					.text(d => d.name)
+			);
+
+		
+
+		function getPathCoordinates(data_point) {
+			let coordinates = [];
+			for (var i = 0; i < features.length; i++) {
+				let ft_name = features[i];
+				let angle = (Math.PI / 2) + (2 * Math.PI * i / features.length);
+				coordinates.push(angleToCoordinate(angle, data_point[ft_name]));
+			}
+			return coordinates;
+		}
+
+		function updateRadarChart(data) {
+			let line = d3.line()
+			  .x(d => d.x)
+			  .y(d => d.y);
+		  
+			let colors = ["#ce2312", "#536eb5", "navy"];
+		  
+			// JOIN data with existing paths
+			let paths = svg.selectAll("path")
+			  .data(data);
+		  
+			// UPDATE existing paths
+			paths.attr("d", d => line(getPathCoordinates(d)))
+			  .attr("stroke-width", 3)
+			  .attr("stroke", (_, i) => colors[i])
+			  .attr("fill", (_, i) => colors[i])
+			  .attr("stroke-opacity", 1)
+			  .attr("opacity", 0.5);
+		  
+			// ENTER new paths
+			paths.enter().append("path")
+			  .datum(d => getPathCoordinates(d))
+			  .attr("d", line)
+			  .attr("stroke-width", 3)
+			  .attr("stroke", (_, i) => colors[i])
+			  .attr("fill", (_, i) => colors[i])
+			  .attr("stroke-opacity", 1)
+			  .attr("opacity", 0.5);
+		  
+			// EXIT old paths
+			paths.exit().remove();
+		  }
+		  
+		
+		updateRadarChart(data);
+	</script>
+
+</body>
+
+</html>
