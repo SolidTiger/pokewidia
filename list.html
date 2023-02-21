@@ -149,9 +149,9 @@
                 .enter()
                 .append('td')
                 .attr("class", "expoleTableTd")
-                .html(function (d) { return "<img src="+pokemon_images[d] +">"; })
+                .html(function (d) { return "<img id = \"pokemon_img\" src="+pokemon_images[d] +">"; })
 
-            var images = d3.selectAll("img").attr("width", "50px").attr("height", "50px")
+            var images = d3.selectAll("#pokemon_img").attr("width", "50px").attr("height", "50px")
                 .on("mouseover", function (d) {tooltip.style("visibility", "visible"); })
                 .on("mousemove", function (d) {tooltip.html(capitalizeFirstLetter(d.srcElement.parentElement.__data__) + "<br>Height: " + list[d.srcElement.parentElement.__data__].height + "dm<br>Weight: " + list[d.srcElement.parentElement.__data__].weight + "hg");console.log(d.srcElement.parentElement.__data__); tooltip.style("top", (event.pageY+20) + "px").style("left", (event.pageX+20) + "px"); })
                 .on("mouseout", function (d)  {tooltip.style("visibility", "hidden"); });
