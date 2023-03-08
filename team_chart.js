@@ -42,8 +42,8 @@ async function update_chart() {
 
     
     var radarChartOptions = {
-        w: 500,
-        h: 500,
+        w: 300,
+        h: 300,
         margin: {
             top: 120,
             right: 120,
@@ -69,6 +69,7 @@ async function update_teams() {
         team_2[i] = element2.options[element2.selectedIndex].value
     }
     await update_chart()
+    // comparision (team1, team2)
 }
 
 factory = new PokemonFactory()
