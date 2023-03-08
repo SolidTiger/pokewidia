@@ -41,7 +41,7 @@ class PokemonFactory {
     async get_pokemon(pokemon_name) {
         if(sessionStorage.getItem(pokemon_name) != null) {
             var pokemon = JSON.parse(sessionStorage.getItem(pokemon_name))
-            console.log("Getting pokemon " + pokemon_name + " from session storage")
+            //console.log("Getting pokemon " + pokemon_name + " from session storage")
             return pokemon
         } else {
             var pokemon_data = await get_pokemon_from_api(pokemon_name)

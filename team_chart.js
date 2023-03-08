@@ -56,7 +56,7 @@ async function update_chart() {
         color: d3.scaleOrdinal().range(["#EDC951", "#CC333F"]),
     };
 
-    console.log(data)
+    //console.log(data)
 
     RadarChart(".team_chart", data, radarChartOptions);
 }
@@ -67,6 +67,8 @@ async function update_teams() {
         var element2 = document.getElementById("team_select_2_" + (i + 1))
         team_1[i] = element1.options[element1.selectedIndex].value
         team_2[i] = element2.options[element2.selectedIndex].value
+
+
     }
     await update_chart()
     // comparision (team1, team2)
