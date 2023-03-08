@@ -6,12 +6,13 @@ const getPokemonData = async (term) => {
 }
 
 var pokemon_data = [];
+
 var promises = [];
 var shown_data = [];
 //Grid used for displaying the choosable pokémon
 var gridData = new Array();
-const num_rows = 16;
-const num_cols = 10;
+const num_rows = 13;
+const num_cols = 13;
 
 
 //Temporary solution to get pokemon data
@@ -25,14 +26,22 @@ for(let i = 1; i < 152; i++) {
 Promise.all(promises).then((data) => {
     data.forEach((pokemon) => {
         pokemon_data.push({
-            group: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
+            name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
             id: pokemon.id,
             value: pokemon.stats,
-            img: pokemon.sprites.other.dream_world.front_default
+            hp: pokemon.stats[0].base_stat,
+            attack: pokemon.stats[1].base_stat,
+            defense: pokemon.stats[2].base_stat,
+            speed: pokemon.stats[5].base_stat,
+            specialAttack: pokemon.stats[3].base_stat,
+            img: pokemon.sprites.other.dream_world.front_default,
+            sprite: pokemon.sprites.front_default,
+            type: pokemon.types
         });
     })
     initgrid(num_rows, num_cols, pokemon_data, 151) 
-    update(shown_data)
+    sessionStorage.setItem("pokemon_data", JSON.stringify(pokemon_data))
+    update(shown_data, pokemon_data)
 })
 
 /**
@@ -76,7 +85,7 @@ svg.append("text")
 .text("Hitpoints (HP)")
 
 //Tooltip for hovering over bars
-const tooltip = d3.select("#my_dataviz")
+const tooltip = d3.select("#grid")
 .append("div")
 .style("opacity", 0)
 .attr("class", "tooltip")
@@ -180,13 +189,13 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
             else {
                 d3.select(this).attr("selected", "false")
                 //Delete the pokemon from the array 
-                shown_data = shown_data.filter(function(pokemon) { return pokemon.group !== d.pokemon.group; })
+                shown_data = shown_data.filter(function(pokemon) { return pokemon.name !== d.pokemon.name; })
             }
             update(shown_data)
     })
     .on("mouseover", function(event, d) { 
             tooltip
-                .html(d.pokemon.group)
+                .html(d.pokemon.name)
                 .style("opacity", 1)     
                 .style("left", (event.pageX) + "px")
                 .style("top", (event.pageY) - 30 + "px")
@@ -237,12 +246,12 @@ function update_grid(sortBy) {
     //Sort the pokemon_data array by the sortBy parameter
     pokemon_data.sort(function(b, a) {
         switch(sortBy) {
-            case 0: return b.id - a.id; break; 
-            case 1: return a.value[0].base_stat - b.value[0].base_stat; break;
-            case 2: return a.value[1].base_stat - b.value[1].base_stat; break;
-            case 3: return a.value[2].base_stat - b.value[2].base_stat; break;
-            case 4: return a.value[5].base_stat - b.value[5].base_stat; break;
-            case 5: return a.value[3].base_stat - b.value[3].base_stat; break;
+            case 0: return b.id - a.id; 
+            case 1: return a.value[0].base_stat - b.value[0].base_stat; 
+            case 2: return a.value[1].base_stat - b.value[1].base_stat;
+            case 3: return a.value[2].base_stat - b.value[2].base_stat;
+            case 4: return a.value[5].base_stat - b.value[5].base_stat;
+            case 5: return a.value[3].base_stat - b.value[3].base_stat;
             default: break; 
         }
     });
@@ -253,12 +262,12 @@ function update_grid(sortBy) {
     //Remove previous selections
     shown_data.forEach(function(pokemon) {
         var column = d3.selectAll(".square")
-        .filter(function(square) { return square.pokemon.group === pokemon.group; });
+        .filter(function(square) { return square.pokemon.name === pokemon.name; });
         column
         .style("stroke", "none")
         
         var image = d3.selectAll(".image")
-        .filter(function(square) { return square.pokemon.group === pokemon.group; });
+        .filter(function(square) { return square.pokemon.name === pokemon.name; });
         image
         .attr("selected", "false")
     })
@@ -289,28 +298,27 @@ function update_grid(sortBy) {
     //Move the new selections
     shown_data.forEach(function(pokemon) {
         var column = d3.selectAll(".square")
-        .filter(function(square) { return square.pokemon.group === pokemon.group; });
+        .filter(function(square) { return square.pokemon.name === pokemon.name; });
         column
         .style("stroke", "black")
         
         var image = d3.selectAll(".image")
-        .filter(function(square) { return square.pokemon.group === pokemon.group; });
+        .filter(function(square) { return square.pokemon.name === pokemon.name; });
         image
         .attr("selected", "true")
     })
 }
 
-
 // Clear all data from the plot
 function clear_data() {
     shown_data.forEach(function(pokemon) {
         var column = d3.selectAll(".square")
-        .filter(function(square) { return square.pokemon.group === pokemon.group; });
+        .filter(function(square) { return square.pokemon.name === pokemon.name; });
         column
         .style("stroke", "none")
         
         var image = d3.selectAll(".image")
-        .filter(function(square) { return square.pokemon.group === pokemon.group; });
+        .filter(function(square) { return square.pokemon.name === pokemon.name; });
         image
         .attr("selected", "false")
     })
@@ -318,67 +326,70 @@ function clear_data() {
     update(shown_data)   
 }
 
+
 // Updates the plot
-function update(data) {
+// function update(data) {
     
-    //Sort descending
-    data.sort(function(b, a) {
-        return a.value[0].base_stat - b.value[0].base_stat;
-    });
+//     //Sort descending
+//     data.sort(function(b, a) {
+//         return a.value[0].base_stat - b.value[0].base_stat;
+//     });
 
-    // Update the X axis
-    x.domain(data.map(function(d) { return d.group; }))
-    xAxis.call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end")
-        .attr("font-size", "15");
+//     // Update the X axis
+//     x.domain(data.map(function(d) { return d.name; }))
+//     xAxis.call(d3.axisBottom(x))
+//         .selectAll("text")
+//         .attr("transform", "translate(-10,0)rotate(-45)")
+//         .style("text-anchor", "end")
+//         .attr("font-size", "15");
 
-    // Update the Y axis
-    y.domain([0, d3.max(data, function(d) { return d.value[0].base_stat }) ]);
-    yAxis.transition().duration(1000).call(d3.axisLeft(y));
+//     // Update the Y axis
+//     y.domain([0, d3.max(data, function(d) { return d.value[0].base_stat }) ]);
+//     yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
-    // Create the u variable
-    var u = svg.selectAll("rect")
-        .data(data)
+//     // Create the u variable
+//     var u = svg.selectAll("rect")
+//         .data(data)
 
-        u
-        .enter()
-        .append("rect") 
-        .merge(u) 
-        .attr("x", function(d) { return x(d.group); })
-        .attr("y", function(d) { return y(d.value[0].base_stat); })
-        .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.value[0].base_stat); })
-        .attr("fill", "#e95e39")
-        .on("mouseover", function(event, d) { 
-            const name = d.group
-            const hp = d.value[0].base_stat
-            tooltip
-                .html(d.group + "<br>" + "hp: " + hp)
-                .style("opacity", 1)
-                .style("left", (event.pageX) + "px")
-                .style("top", (event.pageY) - 30 + "px")
-            d3.select(this).transition()
-            .duration('50')
-            .attr('opacity', '.75')
-        })
-        .on("mousemove", function(event, d) {
-            tooltip.style("transform","translateY(-55%)")
-            .style("left", (event.pageX) + "px")
-            .style("top", (event.pageY) - 30 + "px")
-        })
-        .on('mouseout', function (event, d) {
-            tooltip
-                .style("opacity", 0)
-            d3.select(this).transition()
-            .duration('50')
-            .attr('opacity', '1');
-        })
+//         u
+//         .enter()
+//         .append("rect") 
+//         .merge(u) 
+//         .attr("x", function(d) { return x(d.name); })
+//         .attr("y", function(d) { return y(d.value[0].base_stat); })
+//         .attr("width", x.bandwidth())
+//         .attr("height", function(d) { return height - y(d.value[0].base_stat); })
+//         .attr("fill", "#e95e39")
+//         .on("mouseover", function(event, d) { 
+//             const name = d.name
+//             const hp = d.value[0].base_stat
+//             tooltip
+//                 .html(d.name + "<br>" + "hp: " + hp)
+//                 .style("opacity", 1)
+//                 .style("left", (event.pageX) + "px")
+//                 .style("top", (event.pageY) - 30 + "px")
+//             d3.select(this).transition()
+//             .duration('50')
+//             .attr('opacity', '.75')
+//         })
+//         .on("mousemove", function(event, d) {
+//             tooltip.style("transform","translateY(-55%)")
+//             .style("left", (event.pageX) + "px")
+//             .style("top", (event.pageY) - 30 + "px")
+//         })
+//         .on('mouseout', function (event, d) {
+//             tooltip
+//                 .style("opacity", 0)
+//             d3.select(this).transition()
+//             .duration('50')
+//             .attr('opacity', '1');
+//         })
         
 
-    // If less group in the new dataset, delete the ones not in use anymore
-    u
-    .exit()
-    .remove()
-}
+//     // If less group in the new dataset, delete the ones not in use anymore
+//     u
+//     .exit()
+//     .remove()
+// }
+
+

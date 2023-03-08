@@ -1,0 +1,142 @@
+.type-flying {
+    background-color: #A890F0;
+    border-top-color: #C8C0F8;
+    border-bottom-color: #705898;
+}
+
+.type-bug {
+    background-color: #A8B820;
+    border-top-color: #D8E030;
+    border-bottom-color: #A8B820;
+}
+
+.type-dragon {
+    background-color: #7038F8;
+    border-top-color: #B8A0F8;
+    border-bottom-color: #483890;
+}
+
+.type-electric {
+    background-color: #F8D030;
+    border-top-color: #F8F878;
+    border-bottom-color: #B8A038;
+}
+
+.type-fighting {
+    background-color: #C03028;
+    border-top-color: #F08030;
+    border-bottom-color: #484038;
+}
+
+.type-fire {
+    background-color: #F08030;
+    border-top-color: #F8D030;
+    border-bottom-color: #C03028;
+}
+
+.type-ghost {
+    background-color: #705898;
+    border-top-color: #A890F0;
+    border-bottom-color: #483850;
+}
+
+.type-grass {
+    background-color: #78C850;
+    border-top-color: #C0F860;
+    border-bottom-color: #588040;
+}
+
+.type-ground {
+    background-color: #E0C068;
+    border-top-color: #F8F878;
+    border-bottom-color: #886830;
+}
+
+.type-ice {
+    background-color: #98D8D8;
+    border-top-color: #D0F8E8;
+    border-bottom-color: #9090A0;
+}
+
+.type-normal {
+    background-color: #A8A878;
+    border-top-color: #D8D8D0;
+    border-bottom-color: #705848;
+}
+
+.type-poison {
+    background-color: #A040A0;
+    border-top-color: #D880B8;
+    border-bottom-color: #483850;
+}
+
+.type-psychic {
+    background-color: #F85888;
+    border-top-color: #F8C0B0;
+    border-bottom-color: #789010;
+}
+
+.type-rock {
+    background-color: #B8A038;
+    border-top-color: #E0C068;
+    border-bottom-color: #886830;
+}
+
+.type-water {
+    background-color: #6890F0;
+    border-top-color: #98D8D8;
+    border-bottom-color: #807870;
+}
+
+.t-type {
+    border-style: solid none;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 0.15em;
+    font-variant: small-caps;
+    font-size: 20pt;
+    color: #F8F8F8;
+    text-shadow: 0 1px 1px #807870;
+}
+
+.t-type2 {
+    color: #F8F8F8;
+}
+
+.type-div {
+    border-radius: 25px;
+    width: 300px;
+    padding: 50px;
+    margin: 20px;
+    background-color: black
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); /* divides the container into 4 equal columns */
+    grid-template-rows: 1fr; /* sets the height of the container to 1 row */
+}
+
+.left {
+    grid-column: 2 / 3;
+    text-align: center;
+}
+
+.center {
+    grid-column: 3 / 6;
+    text-align: center;
+}
+
+.right {
+    grid-column: 7 / 8;
+    text-align: center;
+}

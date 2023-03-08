@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <title>Explore Pokémon</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="type-style.css">
+    <title>Explore Pokémon</title>
 </head>
 <body>
     <header>
@@ -18,36 +21,99 @@
         <a href="pokemon_select.html" class="button">Explore Pokémon</a>
     </header>
     <div style="text-align:center">
-        <h1>HP in descending order</h1>
-        <div id="my_dataviz" style="text-align:center"></div>
-        <button type="button" class="button" onclick="clear_data()" style="position:relative; top:-10px">Clear All</button>
-        <div class="dropdown" style="position: relative; display:inline-block;">
-            <button class="button" onclick="dropdown()" style="position:relative; top:-10px;">Sort By</button>
-                <div id="sort_dropdown" class="dropdown-content">
-                    <a onclick="update_grid(0)">Pokédex No.</a>
-                    <a onclick="update_grid(1)">HP</a>
-                    <a onclick="update_grid(2)">Attack</a>
-                    <a onclick="update_grid(3)">Defense</a>
-                    <a onclick="update_grid(4)">Speed</a>
-                    <a onclick="update_grid(5)">Special</a>
+        <!-- Create a div where the graph will take place -->
+        <label for="scatterPlot">This scatterplot is a work in progress, there should be mouse hover features in the final implementations, also the styling is not done yet.</label>
+        <div id="scatterPlot"></div>
+
+        <!-- Initialize a select button -->
+        <label for="dropdown">X:</label>
+        <select id="selectX"></select>
+        <label for="dropdown">Y:</label>
+        <select id="selectY"></select>
+        <div class="container">
+            <!-- <div id="my_dataviz" style="text-align:center"></div> -->
+            <div class="left">
+            <div class="dropdown" >
+                    <button class="button" onclick="dropdown()">Sort By</button>
+                        <div id="sort_dropdown" class="dropdown-content">
+                            <a onclick="update_grid(0)">Pokédex No.</a>
+                            <a onclick="update_grid(1)">HP</a>
+                            <a onclick="update_grid(2)">Attack</a>
+                            <a onclick="update_grid(3)">Defense</a>
+                            <a onclick="update_grid(4)">Speed</a>
+                            <a onclick="update_grid(5)">Special</a>
+                        </div>
                 </div>
+                <button type="button" class="button" onclick="clear_data()">Clear All</button>
+            </div>        
+            <!-- <div style="position: relative; display:inline-block;">
+                Sort Order
+                <label class="container"> 
+                    <input type="radio" id="ascending" name="radio" checked="checked">
+                    <span class="checkmark"></span>
+                    Ascending
+                </label>
+                <label class="container"> 
+                    <input type="radio" id="descending" name="radio">
+                    <span class="checkmark"></span>
+                    Descending
+                </label>
+            </div> -->
+            <div id="grid" class="center"></div>
+            <div class ="right">
+                <h4>The following is for filtering by type, which grays out the irrelevant types in the grid. <br> Not implemented yet. Should probably be icons and not text. What do you think Mario? :)</h4>
+                <div class="t-type type-bug">
+                    <span class="t-type2 unselectable">Bug</span>
+                </div>
+                <div class="t-type type-dragon">
+                    <span class="t-type2 unselectable">Dragon</span>
+                </div>
+                <div class="t-type type-electric">
+                    <span class="t-type2 unselectable">Electric</span>
+                </div>
+                <div class="t-type type-fighting">
+                    <span class="t-type2 unselectable">Fighting</span>
+                </div>
+                <div class="t-type type-fire">
+                    <span class="t-type2 unselectable">Fire</span>
+                </div>
+                <div class="t-type type-flying">
+                    <span class="t-type2 unselectable">Flying</span>
+                </div>
+                <div class="t-type type-ghost">
+                    <span class="t-type2 unselectable">Ghost</span>
+                </div>
+                <div class="t-type type-grass">
+                    <span class="t-type2 unselectable">Grass</span>
+                </div>
+                <div class="t-type type-ground">
+                    <span class="t-type2 unselectable">Ground</span>
+                </div>
+                <div class="t-type type-ice">
+                    <span class="t-type2 unselectable">Ice</span>
+                </div>
+                <div class="t-type type-normal">
+                    <span class="t-type2 unselectable">Normal</span>
+                </div>
+                <div class="t-type type-poison">
+                    <span class="t-type2 unselectable">Poison</span>
+                </div>
+                <div class="t-type type-psychic">
+                    <span class="t-type2 unselectable">Psychic</span>
+                </div>
+                <div class="t-type type-rock">
+                    <span class="t-type2 unselectable">Rock</span>
+                </div>
+                <div class="t-type type-water">
+                    <span class="t-type2 unselectable">Water</span>
+                </div>
+            </div>
         </div>
-        <!-- <div style="position: relative; display:inline-block;">
-            Sort Order
-            <label class="container"> 
-                <input type="radio" id="ascending" name="radio" checked="checked">
-                <span class="checkmark"></span>
-                Ascending
-            </label>
-            <label class="container"> 
-                <input type="radio" id="descending" name="radio">
-                <span class="checkmark"></span>
-                Descending
-            </label>
-        </div> -->
-        <div id="grid"></div>
+        
+
     </div>
-    <script src="pokemon_select.js"></script>
+    <script type="text/javascript" src="pokemon_select.js"></script>
+    <script type="text/javascript" src="scatterPlot.js"></script>
     <script>
         /**------------------------
          * Script for dropdown menu
