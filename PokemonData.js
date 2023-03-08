@@ -19,7 +19,8 @@ async function get_pokemon_from_api(pokemon_name) {
 
 // Class that stores a Pokemon with name, image, type, hp, attack, defense, sp_attack, sp_defense, and speed
 class Pokemon {
-    constructor(name, image, type, hp, attack, defense, special_attack, special_defense, speed) {
+    constructor(id, name, image, type, hp, attack, defense, special_attack, special_defense, speed) {
+        this.id = id
         this.name = name
         this.image = image
         this.type = type
@@ -45,6 +46,7 @@ class PokemonFactory {
             return pokemon
         } else {
             var pokemon_data = await get_pokemon_from_api(pokemon_name)
+            var id = await pokemon_data.id
             var image = await pokemon_data.sprites.front_default
             var type = await pokemon_data.types[0].type.name
             var stats = await pokemon_data.stats
@@ -54,7 +56,7 @@ class PokemonFactory {
             var special_attack = await stats[3].base_stat
             var special_defense = await stats[4].base_stat  
             var speed = await stats[5].base_stat
-            var pokemon = new Pokemon(pokemon_name, image, type, hp, attack, defense, special_attack, special_defense, speed)
+            var pokemon = new Pokemon(id, pokemon_name, image, type, hp, attack, defense, special_attack, special_defense, speed)
             sessionStorage.setItem(pokemon_name, JSON.stringify(pokemon))
             return pokemon
         }
