@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Team Chart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    
+    <header>
+        <img src = "Pokewidia_logo.png" width = 400><br>
+        <a href="index.html" class="button">Home</a>
+        <a href="list.html" class="button">List Pokémon</a>
+        <!--<a href="team.html" class="button">Create a team</a>-->
+        <!--<a href="about.html" class="button">About</a>-->
+        <a href="radarChart.html" class="button">Radar Chart</a>
+        <a href="celinaTest.html" class="button">View HP stats</a>
+        <a href="pokemon_select.html" class="button">Explore Pokémon</a>
+    </header>
+
+    <!--Centered div-->
+    <!--With margins-->
+    <div style="display: flex; justify-content: center; margin: 100 100 100 100;">
+        <h1>Team Stats Comparison</h1>
+    </div>
+    <!--Centered div-->
+    <!--With margins-->
+    <div class="team_select" style="display: flex; justify-content: center; margin: 100 100 100 100;">
+        <div class="team_select_1", style = "float: left">
+            <select id="team_select_1_1">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_1_2">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_1_3">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_1_4">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_1_5">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_1_6">
+                <option value="">Select a Pokemon</option>
+            </select>
+        </div>
+        <!--Centered div-->
+        <!--With margins-->
+        <div class="team_chart" style="display: flex; justify-content: center; margin: 100 100 100 100;">
+        </div>
+        <div class="team_select_2" style = "float: right">
+            <select id="team_select_2_1">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_2_2">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_2_3">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_2_4">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_2_5">
+                <option value="">Select a Pokemon</option>
+            </select><br>
+            <select id="team_select_2_6">
+                <option value="">Select a Pokemon</option>
+            </select>
+        </div>
+    </div>
+
+    <script src="PokemonData.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="radarChart.js"></script>
+    <script src="team_chart.js"></script>
+</body>
+
+
+
+
+</html>
