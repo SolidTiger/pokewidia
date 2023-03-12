@@ -19,14 +19,14 @@ function update(shown_data = null, pokemon_data = null) {
     if(shown_data != null) global_shown = shown_data;
 
     var delay = 1000
-    console.log(zoomed)
+
     if (zoomed) {
         svg.selectAll("rect").transition().duration(1000)
             .call(zoom.transform, d3.zoomIdentity);
         delay = 0
     }
     zoomed = false;
-    console.log(zoomed)
+
     x.domain([0, d3.max(data, function (d) { return d[optionX]; })])
     xAxis.transition().duration(delay).call(d3.axisBottom(x));
 
