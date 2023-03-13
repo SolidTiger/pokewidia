@@ -137,10 +137,44 @@ async function createGraph(){
 }
 
 async function showList(){
-    nodes, links = await compare();
-    console.log(nodes)
-    console.log(links)
-    createGraph();
+    //nodes, links = await compare();
+    
+    var table = d3.select("table").selectAll("*").remove();
+    var h1 = d3.select("#compare").selectAll("h1").remove();
+    var table = d3.select("#compare").append("table");
+
+    for(var i = 0; i< 6 ;i ++){
+        try {
+            var pokemon1 = await factory.get_pokemon(team_1[i]);
+            var pokemon2 = await factory.get_pokemon(team_2[i]);
+            var attack ="";
+            var dmg = await compareType(team_1[i], team_2[i]);
+            var type1 = pokemon1.type;
+            var type2 = pokemon2.type;
+           
+            if( dmg == 0){
+                attack = team_1[i] + " ["+ type1+"] "+ " deals no dmg to " + team_2[i] +" ["+ type2 +"]";
+            }
+            else if(dmg < 1){
+                attack = team_1[i] + " ["+ type1+"] "+" is weak against " + team_2[i] +" ["+ type2 +"]";
+            }
+            else if(dmg > 1){
+                attack = team_1[i] +" ["+ type1+"] "+ " is strong against " + team_2[i]+" ["+ type2 +"]";
+                
+            } else{
+                attack = team_1[i] +" ["+ type1+"] "+ " is neutral against " + team_2[i] +" ["+ type2 +"]";
+            }
+
+            var table = d3.select("table").append("tr").html("<td><img src = " + pokemon1.image +"></img></td><td>"+attack+"</td><td><img src = "+ pokemon2.image+"></img></td>");
+    
+        } catch (error) {
+            var div = d3.select("#compare").append("h1").html("Select both teams fully");
+            break
+        }
+    }
+    //console.log(nodes)
+    //console.log(links)
+    //createGraph();
 }
 
 class fight{
