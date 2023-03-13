@@ -22,6 +22,7 @@
 
     <div class="center">
         <div id="grid" class="grid"></div>
+           
         <div id="scatterPlot" class="scatter">
             <div style="position: absolute;">
                 <select id="selectY" style="position: relative; top: 9px; left: 71px; z-index:1;"></select>
@@ -30,7 +31,9 @@
         </div>
     </div>
     <div class="center">
-        <div id="filter" class="filter-background"></div>
+        <div id="filter" class="filter-background">
+            <div style="font-size:35px; position:relative; top:-20px; left:25px;">Filter</div>
+        </div>
     </div>
     <div class="center">    
         <!-- <div class="dropdown">
@@ -47,6 +50,7 @@
             </div>
         </div>         -->
         <div id="sort_dropdown" class="sort">
+            <div style="font-size:35px; position:relative; top:-20px; left:25px;">Sort</div>
             <img src="assets/sort_icons/0.svg" name="Pokédex ID" width="51" onclick="update_grid(0)" class="sort-element">
             <img src="assets/sort_icons/1.svg" name="Hit Point" width="51" onclick="update_grid(1)" class="sort-element">
             <img src="assets/sort_icons/2.svg" name="Attack" width="51" onclick="update_grid(2)" class="sort-element">
@@ -70,7 +74,9 @@
         
         
     </div>
-    <button type="button" class="button" onclick="clear_data()">Clear All</button>
+    <div class="center">
+        <button type="button" class="button" onclick="clear_data()" style="position:relative; top:-75px; left: -275px;">Clear All</button>
+    </div>
     <script type="text/javascript" src="pokemon_select.js"></script>
     <script type="text/javascript" src="scatterPlot.js"></script>
     <!-- <script>

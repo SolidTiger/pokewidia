@@ -96,7 +96,7 @@ body {
 .filter_icon {
     position: relative; 
     left: 34px;
-    top: 25px; 
+    top: -20px; 
     margin-right: 10px;
     
 }
@@ -124,6 +124,6 @@ body {
 .sort-element {
     position: relative;
     margin-right: 9px;
-    top: 25px;
+    top: -15px;
     left: 22px;
 }
