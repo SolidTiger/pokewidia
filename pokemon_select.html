@@ -12,60 +12,74 @@
     <title>Explore Pokémon</title>
 </head>
 <body>
+
     <header>
         <img src = "Pokewidia_logo.png" width = 400><br>
         <a href="index.html" class="button">Home</a>
         <a href="pokemon_select.html" class="button">Explore Pokémon</a>
         <a href="team_chart.html" class="button">Compare Teams</a>
     </header>
-    <div style="text-align:center">
-        <!-- Create a div where the graph will take place -->
-        <label for="scatterPlot">This scatterplot is a work in progress, there should be mouse hover features in the final implementations, also the styling is not done yet.</label>
-        <div id="scatterPlot"></div>
 
-        <!-- Initialize a select button -->
-        <label for="dropdown">X:</label>
-        <select id="selectX"></select>
-        <label for="dropdown">Y:</label>
-        <select id="selectY"></select>
-        <div>
-            <!-- <div id="my_dataviz" style="text-align:center"></div> -->
-            <div>
-            <div class="dropdown">
-                    <button class="button" onclick="dropdown()">Sort By
-                    </button>
-                        <div id="sort_dropdown" class="dropdown-content" style="text-align:center;">
-                            <a onclick="update_grid(0)">Pokédex No.</a>
-                            <a onclick="update_grid(1)">HP</a>
-                            <a onclick="update_grid(2)">Attack</a>
-                            <a onclick="update_grid(3)">Defense</a>
-                            <a onclick="update_grid(4)">Speed</a>
-                            <a onclick="update_grid(5)">Special</a>
-                        </div>
-                </div>
-                <button type="button" class="button" onclick="clear_data()">Clear All</button>
-            </div>        
-            <!-- <div style="position: relative; display:inline-block;">
-                Sort Order
-                <label class="container"> 
-                    <input type="radio" id="ascending" name="radio" checked="checked">
-                    <span class="checkmark"></span>
-                    Ascending
-                </label>
-                <label class="container"> 
-                    <input type="radio" id="descending" name="radio">
-                    <span class="checkmark"></span>
-                    Descending
-                </label>
-            </div> -->
-            <div id="grid"></div>
-            <div id="filter"></div>
-
+    <div class="center">
+        <div id="grid" class="grid"></div>
+           
+        <div id="scatterPlot" class="scatter">
+            <div style="position: absolute;">
+                <select id="selectY" style="position: relative; top: 9px; left: 71px; z-index:1;"></select>
+                <select id="selectX" style="position: relative; top: 745px; left: 696px; z-index:1;"></select> 
+            </div>
         </div>
+    </div>
+    <div class="center">
+        <div id="filter" class="filter-background">
+            <div style="font-size:35px; position:relative; top:-20px; left:25px; font-weight:500;">Filter</div>
+        </div>
+    </div>
+    <div class="center">    
+        <!-- <div class="dropdown">
+                <button class="button" onclick="dropdown()">Sort By
+                </button>
+                    <div id="sort_dropdown" class="dropdown-content" style="text-align:center;">
+                        <a onclick="update_grid(0)">Pokédex No.</a>
+                        <a onclick="update_grid(1)">HP</a>
+                        <a onclick="update_grid(2)">Attack</a>
+                        <a onclick="update_grid(3)">Defense</a>
+                        <a onclick="update_grid(4)">Speed</a>
+                        <a onclick="update_grid(5)">Special</a>
+                    </div>
+            </div>
+        </div>         -->
+        <div id="sort_dropdown" class="sort">
+            <div style="font-size:35px; position:relative; top:-20px; left:25px; font-weight:500;">Sort</div>
+            <img src="assets/sort_icons/0.svg" name="Pokédex ID" width="51" onclick="update_grid(0)" class="sort-element">
+            <img src="assets/sort_icons/1.svg" name="Hit Point" width="51" onclick="update_grid(1)" class="sort-element">
+            <img src="assets/sort_icons/2.svg" name="Attack" width="51" onclick="update_grid(2)" class="sort-element">
+            <img src="assets/sort_icons/3.svg" name="Defense" width="51" onclick="update_grid(3)" class="sort-element">
+            <img src="assets/sort_icons/4.svg" name="Speed" width="51" onclick="update_grid(4)" class="sort-element">
+            <img src="assets/sort_icons/5.svg" name="Special" width="51" onclick="update_grid(5)" class="sort-element">
+        </div>
+        <!-- <div style="position: relative; display:inline-block;">
+            Sort Order
+            <label class="container"> 
+                <input type="radio" id="ascending" name="radio" checked="checked">
+                <span class="checkmark"></span>
+                Ascending
+            </label>
+            <label class="container"> 
+                <input type="radio" id="descending" name="radio">
+                <span class="checkmark"></span>
+                Descending
+            </label>
+        </div> -->
+        
+        
+    </div>
+    <div class="center">
+        <button type="button" class="button" onclick="clear_data()" style="position:relative; top:-75px; left: -275px;">Clear All</button>
     </div>
     <script type="text/javascript" src="pokemon_select.js"></script>
     <script type="text/javascript" src="scatterPlot.js"></script>
-    <script>
+    <!-- <script>
         /**------------------------
          * Script for dropdown menu
          * ------------------------
@@ -84,8 +98,8 @@
           }
         }
 
-    </script>
-    <style>
+    </script> -->
+    <!-- <style>
         /* Styling unique for this HTML document */
         .dropdown-content {
             border-radius: 10px;
@@ -119,7 +133,7 @@
             background-color: #ddd;
         }
 
-    </style>
+    </style> -->
 </body>
 
 </html>
