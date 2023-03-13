@@ -10,8 +10,12 @@ var zoomed = false;
 // console.log(data)
 // var data = pokemon_data
 
+
 // A function that update the chart
 function update(shown_data = null, pokemon_data = null) {
+
+    svg.transition()
+            .call(zoom.transform, d3.zoomIdentity);
     //Ful-lösning, pokemonfactory räddar oss senare
     if(data == null) {
         data = pokemon_data
@@ -19,86 +23,97 @@ function update(shown_data = null, pokemon_data = null) {
     if(shown_data != null) global_shown = shown_data;
 
     var delay = 1000
-    console.log(zoomed)
-    if (zoomed) {
-        svg.selectAll("rect").transition().duration(1000)
-            .call(zoom.transform, d3.zoomIdentity);
-        delay = 0
-    }
-    zoomed = false;
-    console.log(zoomed)
-    x.domain([0, d3.max(data, function (d) { return d[optionX]; })])
+    // if (zoomed) {
+    //     svg.transition().duration(1000)
+    //         .call(zoom.transform, d3.zoomIdentity);
+    //     delay = 0
+    // }
+    // zoomed = false;
+    
+    x.domain([0, d3.max(data, function (d) { return d[optionX]; }) + 9])
     xAxis.transition().duration(delay).call(d3.axisBottom(x));
 
-    y.domain([0, d3.max(data, function (d) { return d[optionY]; })])
+    y.domain([0, d3.max(data, function (d) { return d[optionY]; }) + 10])
     yAxis.transition().duration(delay).call(d3.axisLeft(y));
-/*
-    scatter
-        .selectAll("circle")
-        .data(data)
-        .transition()
-        .duration(1000)
-        .attr("cx", function (d) { return x(d[optionX]); })
-        .attr("cy", function (d) { return y(d[optionY]); })
-        .attr("r", radius)
-        .style("fill", color)*/
 
     var circles = scatter.selectAll("circle")
         .data(data);
-
+    
     circles.enter()
         .append("circle")
         .attr("cx", function(d) { return x(d[optionX]); })
         .attr("cy", function(d) { return y(d[optionY]); })
         .attr("r", radius)
         .style("fill", color)
-        .style("opacity", 0.2)
+        .style("opacity", transparent)
+        .on("mouseover", function(event, d) { 
+            // d3.select(this).style("opacity", opace)
+            tooltip
+                .html(d.name)
+                .style("opacity", 1)     
+                .style("left", (event.pageX) + "px")
+                .style("top", (event.pageY) - 30 + "px")
+            d3.select(this).transition()
+            .duration('50')
+            .attr('opacity', '.75')
+        })
+        .on("mousemove", function(event, d) {
+            tooltip.style("transform","translateY(-55%)")
+            .style("left", (event.pageX) + "px")
+            .style("top", (event.pageY) - 30 + "px")
+        })
+        .on('mouseout', function (event, d) {
+            // d3.select(this).style("opacity", transparent)
+            tooltip
+                .style("opacity", 0)
+                .style("left", "0px")
+                .style("top",  "0px")
+            d3.select(this).transition()
+            .duration('50')
+            .attr('opacity', '1');
+        })
+        .on("click", function(event, d) { 
 
+            var grid = d3.selectAll(".square").filter(function(square) {return square.pokemon.name === d.name;});
+            var image = d3.selectAll("#grid").selectAll("image").filter(function(image) {return image.pokemon.name === d.name;});
 
-    circles.exit().remove();
+            grid.style("stroke", grid.style("stroke") === "none" ? "black" : "none")
+
+            var selected = d3.select(this)
+            if(selected.style("opacity") === opace.toString()) {
+                image.attr("selected", "false")
+                global_shown = global_shown.filter(function(pokemon) { return pokemon.name !== d.name; })
+                selected.style("opacity", transparent)
+            } else {
+                image.attr("selected", "true")
+                global_shown.push(d)
+                selected.style("opacity", opace)
+            }
+        })
+
+        
+    // circles.exit().remove();
 
     circles
-        // .transition()
-        // .duration(1000)
+        .transition()
+        .duration(1000)
         .attr("cx", function(d) { return x(d[optionX]); })
         .attr("cy", function(d) { return y(d[optionY]); })
         .attr("r", radius)
-        // .transition()
-        // .duration(1)
+    circles
         .style("fill", color)
-        .style("opacity", 0.2)
+        .style("opacity", transparent)
+        
     
     if(shown_data != null) {
         shown_data.forEach(element => {
             scatter
-                // .transition()
-                // .duration(1000)
                 .selectAll("circle")
                 .filter(function(d) { return element.id == d.id; })
-                // .transition()
-                // .duration(1)
-                .style("fill", color)
-                .style("opacity", 1.0)
-                // .attr("r", radius*2.0);
+                .style("fill", selected_color)
+                .style("opacity", opace)
         });
     }
-    
-
-        /*
-    scatter.append('g')
-        // .selectAll("dot")
-        .data(data)
-        .transition()
-        .duration(1000)
-        .enter()
-        .append("circle")
-        .attr("cx", function (d) { return x(d[optionX]); })
-        .attr("cy", function (d) { return y(d[optionY]); })
-        .attr("r", radius)
-        .style("fill", color)*/
-        //.exit()
-        // .remove()
-
 }
 
 // A function that updates the chart when the user zoom and thus new boundaries are available
@@ -120,12 +135,10 @@ function updateChart({transform}) {
         .attr('cy', function (d) { return newY(d[optionY]) });
 }
 
-
-
 // set the dimensions and margins of the graph
 var margin = { top: 10, right: 30, bottom: 30, left: 60 },
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    width = 560 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
 // CODE STARTS HERE
 
@@ -169,38 +182,27 @@ d3.select("#selectY")
 
 // Add X axis
 var x = d3.scaleLinear()
-    .domain([0, 151])
+    .domain([0, 151 + 9])
     .range([0, width]);
 var xAxis = svg.append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x))
+    .style("user-select", "none")
 
 // Add Y axis
 var y = d3.scaleLinear()
-    .domain([0, 250])
+    .domain([0, 250 + 10])
     .range([height, 0]);
 var yAxis = svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y))
+    .style("user-select", "none")
 
-var radius = 5.0
+var radius = 7.5
 var color = "#e97b5d"
+var selected_color = "#e97b5d"
 
-// Create the scatter variable: where both the circles and the brush take place
-var scatter = svg.append('g')
-    .attr("clip-path", "url(#clip)")
-/*
-scatter.append('g')
-    .selectAll("dot")
-    .data(data)
-    .enter()
-    .append("circle")
-    .attr("cx", function (d) { return x(d[optionX]); })
-    .attr("cy", function (d) { return y(d[optionY]); })
-    .attr("r", radius)
-    .style("fill", color)
-    .on("mouseover", mouseover)
-    .on("mousemove", mousemove)
-    .on("mouseleave", mouseleave)*/
+var transparent = 0.2
+var opace = 1.0
 
 // When the button is changed, run the updateChart function
 d3.select("#selectX").on("change", function (d) {
@@ -238,42 +240,17 @@ svg.append("rect")
     .attr("height", height)
     .style("fill", "none")
     .style("pointer-events", "all")
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-    .call(zoom);
+    .attr('transform', 'translate(' + margin.left - width + ',' + margin.top - height + ')')
+    // .call(zoom);
+
+// Create the scatter variable: where both the circles and the brush take place
+var scatter = svg.append('g')
+    .attr("clip-path", "url(#clip)")
+
+svg.call(zoom)
+
+svg.on("wheel", function(event, d) {
+    event.preventDefault();
+})
 
 update();
-
-/*
-// Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
-// Its opacity is set to 0: we don't see it by default.
-var tooltip = d3.select("#scatterPlot")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "1px")
-    .style("border-radius", "5px")
-    .style("padding", "10px")
-
-// A function that change this tooltip when the user hover a point.
-// Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
-var mouseover = function (d) {
-    tooltip
-        .style("opacity", 1)
-}
-
-var mousemove = function (d) {
-    tooltip
-        .html("The exact value of<br>the Ground Living area is: " + d[optionX])
-        .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (d3.mouse(this)[1]) + "px")
-}
-
-// A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-var mouseleave = function (d) {
-    tooltip
-        .transition()
-        .duration(200)
-        .style("opacity", 0)
-}*/
