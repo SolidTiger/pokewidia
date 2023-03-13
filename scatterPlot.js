@@ -79,15 +79,21 @@ function update(shown_data = null, pokemon_data = null) {
             var grid = d3.selectAll(".square").filter(function(square) {return square.pokemon.name === d.name;});
             var image = d3.selectAll("#grid").selectAll("image").filter(function(image) {return image.pokemon.name === d.name;});
 
-            grid.style("stroke", grid.style("stroke") === "none" ? "black" : "none")
+            grid.style("stroke", grid.style("stroke") === "none" ? "#555" : "none")
 
             var selected = d3.select(this)
             if(selected.style("opacity") === opace.toString()) {
                 image.attr("selected", "false")
                 global_shown = global_shown.filter(function(pokemon) { return pokemon.name !== d.name; })
+                if(shown_data != null) {
+                    shown_data = shown_data.filter(function(pokemon) { return pokemon.name !== d.name; })
+                }
                 selected.style("opacity", transparent)
             } else {
                 image.attr("selected", "true")
+                if(shown_data != null) {
+                    shown_data.push(d)
+                }
                 global_shown.push(d)
                 selected.style("opacity", opace)
             }
