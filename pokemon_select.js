@@ -110,14 +110,8 @@ var image_mouseclick = function(event, d) {
     .style("stroke", function() {
         return d3.select(this).style("stroke") === "none" ? "#555" : "none";
     })
-    // .style("fill", function() { 
-    //     return d3.select(this).style("fill") === "white" ? "#ce2312" : "white"; 
-    // })
-    //These should be added before
-    .transition()
-    .duration(10)
 
-    
+
     if(d3.select(this).attr("selected") === "false") {
         d3.select(this).attr("selected", "true")
         shown_data.push(d.pokemon)
@@ -162,7 +156,7 @@ var image_mousemove = function(event, d) {
 function filter_type() {
     types = ["Bug", "Dragon", "Electric", "Fighting", "Fire", "Ghost", "Grass", "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Water"]
 
-    var filter_div = d3.select("#filter")
+    var filter_div = d3.select("#filter").attr("selected-type", "none")
     for(let i = 0; i < types.length; i++) {
         filter_div.append("img")
         .attr("src", `assets/filter_icons/Pokemon_Type_Icon_${types[i]}.svg`)
@@ -178,6 +172,7 @@ function filter_type() {
             var selected = d3.select(this).style("border")
             d3.select(this).style("opacity", "1")
             if(selected == "3px solid rgb(85, 85, 85)") {
+                filter_div.attr("selected-type", "none")
                 //Remove the filter
                 d3.select(this)
                 .style("border", "none")
@@ -204,7 +199,8 @@ function filter_type() {
                 .on("mouseover", image_mouseover)
                 .on("mousemove", image_mousemove)
                 .on("mouseout", image_mouseout)
-
+                
+                filter_div.attr("selected-type", type)
 
                 d3.select(this).style("border", "3px solid #555")
                 d3.selectAll(".image")
@@ -242,6 +238,8 @@ function filter_type() {
             .style('opacity', border == "3px solid rgb(85, 85, 85)" ? 1 : 0.75);
         })
     }
+
+
 }
 
 
@@ -301,8 +299,6 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     .style("rx", "8px")
     .style("ry", "8px")
 
-
-
     //The pokemon images
     var images = row.selectAll(".image")
     .data(function(d) { return d; })
@@ -319,24 +315,6 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     .on("mousemove", image_mousemove)
     .on('mouseout', image_mouseout)
     images.exit().remove()
-
-
-
-    //Initialize the graph with the first 3 pokemon and reflect it in the filling of the grid
-    // shown_data = pokemon_data.slice(0, 3)
-    // shown_data.forEach(function(pokemon) {
-    //     var column = d3.selectAll(".square")
-    //     .filter(function(square) { return square.pokemon.group === pokemon.group; });
-    //     column
-    //     .style("stroke", function() {
-    //         return d3.select(this).style("stroke") === "none" ? "black" : "none";
-    //     })
-        
-    //     var image = d3.selectAll(".image")
-    //     .filter(function(square) { return square.pokemon.group === pokemon.group; });
-    //     image
-    //     .attr("selected", "true")
-    // })   
 }
 
 function update_grid(sortBy) {
@@ -408,7 +386,30 @@ function update_grid(sortBy) {
         .filter(function(square) { return square.pokemon.name === pokemon.name; });
         image
         .attr("selected", "true")
+
     })
+
+    //Ensure that filters move with the grid
+    d3.select("#grid")
+    .selectAll(".image")
+    .attr("opacity", 1)
+    .on("click", image_mouseclick)
+    .on("mouseover", image_mouseover)
+    .on("mousemove", image_mousemove)
+    .on("mouseout", image_mouseout)
+
+    var type = d3.select("#filter").attr("selected-type")
+    
+    d3.select("#grid").selectAll(".image")
+    .filter(function(square) {
+        return square.pokemon.type[0].type.name.toLowerCase() !== type.toLowerCase()
+    })
+    .attr("opacity", 0.10)
+    .on("click", null)
+    .on("mouseover", null)
+    .on("mousemove", null)
+    .on("mouseout", null)
+
 }
 
 // Clear all data from the plot
@@ -429,69 +430,3 @@ function clear_data() {
 }
 
 filter_type()
-// Updates the plot
-// function update(data) {
-    
-//     //Sort descending
-//     data.sort(function(b, a) {
-//         return a.value[0].base_stat - b.value[0].base_stat;
-//     });
-
-//     // Update the X axis
-//     x.domain(data.map(function(d) { return d.name; }))
-//     xAxis.call(d3.axisBottom(x))
-//         .selectAll("text")
-//         .attr("transform", "translate(-10,0)rotate(-45)")
-//         .style("text-anchor", "end")
-//         .attr("font-size", "15");
-
-//     // Update the Y axis
-//     y.domain([0, d3.max(data, function(d) { return d.value[0].base_stat }) ]);
-//     yAxis.transition().duration(1000).call(d3.axisLeft(y));
-
-//     // Create the u variable
-//     var u = svg.selectAll("rect")
-//         .data(data)
-
-//         u
-//         .enter()
-//         .append("rect") 
-//         .merge(u) 
-//         .attr("x", function(d) { return x(d.name); })
-//         .attr("y", function(d) { return y(d.value[0].base_stat); })
-//         .attr("width", x.bandwidth())
-//         .attr("height", function(d) { return height - y(d.value[0].base_stat); })
-//         .attr("fill", "#e95e39")
-//         .on("mouseover", function(event, d) { 
-//             const name = d.name
-//             const hp = d.value[0].base_stat
-//             tooltip
-//                 .html(d.name + "<br>" + "hp: " + hp)
-//                 .style("opacity", 1)
-//                 .style("left", (event.pageX) + "px")
-//                 .style("top", (event.pageY) - 30 + "px")
-//             d3.select(this).transition()
-//             .duration('50')
-//             .attr('opacity', '.75')
-//         })
-//         .on("mousemove", function(event, d) {
-//             tooltip.style("transform","translateY(-55%)")
-//             .style("left", (event.pageX) + "px")
-//             .style("top", (event.pageY) - 30 + "px")
-//         })
-//         .on('mouseout', function (event, d) {
-//             tooltip
-//                 .style("opacity", 0)
-//             d3.select(this).transition()
-//             .duration('50')
-//             .attr('opacity', '1');
-//         })
-        
-
-//     // If less group in the new dataset, delete the ones not in use anymore
-//     u
-//     .exit()
-//     .remove()
-// }
-
-
