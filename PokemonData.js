@@ -47,7 +47,7 @@ class PokemonFactory {
         } else {
             var pokemon_data = await get_pokemon_from_api(pokemon_name)
             var id = await pokemon_data.id
-            var image = await pokemon_data.sprites.front_default
+            var image = await pokemon_data.sprites.other.dream_world.front_default
             var type = await pokemon_data.types[0].type.name
             var stats = await pokemon_data.stats
             var hp = await stats[0].base_stat
