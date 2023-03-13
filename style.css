@@ -87,3 +87,43 @@ body {
 .background{
     background-color: #e6c8ca;
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.filter_icon {
+    position: relative; 
+    left: 34px;
+    top: 25px; 
+    margin-right: 10px;
+    
+}
+
+.filter-background {
+    position: relative;
+    background-color: #b9aa85;
+    border-radius: 25px;
+    width: 900px;
+    height: 100px; 
+    left:-450px;
+    top: -20px;
+}
+
+.sort {
+    position: relative;
+    background-color: #b9aa85; 
+    border-radius: 25px;
+    height: 100px; 
+    width:420px;
+    left: -670px;
+    top: 10px; 
+}
+
+.sort-element {
+    position: relative;
+    margin-right: 9px;
+    top: 25px;
+    left: 22px;
+}

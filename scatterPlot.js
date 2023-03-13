@@ -48,7 +48,7 @@ function update(shown_data = null, pokemon_data = null) {
         .attr("r", radius)
         .style("fill", color)
         .style("opacity", transparent)
-        .on("mouseover", function(event, d) { 
+        .on("mouseover", function(event, d) {
             // d3.select(this).style("opacity", opace)
             tooltip
                 .html(d.name)
@@ -145,8 +145,8 @@ function updateChart({transform}) {
 
 // set the dimensions and margins of the graph
 var margin = { top: 10, right: 30, bottom: 30, left: 60 },
-    width = 560 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 935 - margin.left - margin.right,
+    height = 805 - margin.top - margin.bottom;
 
 // CODE STARTS HERE
 
