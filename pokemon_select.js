@@ -159,11 +159,7 @@ var sort_grid = d3.select("#sort_dropdown")
     .on("click", function() {
         var selected = d3.select(this).attr("selected")
 
-        if (selected == "true") { 
-            d3.select(this)
-            .style("border", "none")
-            .attr("selected", "false")
-        } else {
+        if (selected != "true") { 
             sort_grid.
             style("border", "none")
             .attr("selected", "false")
@@ -186,6 +182,13 @@ var sort_grid = d3.select("#sort_dropdown")
     .on("mouseout", image_mouseout)
     .on("mousemove", image_mousemove)
 
+d3.select("#sort_dropdown")
+.selectAll("img")
+.filter(function () {
+    return d3.select(this).attr("name") === "Pokédex ID"
+})
+.attr("selected", "true")
+.style("border", "5px solid #555")
 
 
 
