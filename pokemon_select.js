@@ -13,7 +13,8 @@ var shown_data = [];
 var gridData = new Array();
 const num_rows = 13;
 const num_cols = 13;
-
+//Data used for filtering
+filter_data = []
 
 //Temporary solution to get pokemon data
 //Fetches all starter pokemon from gen 1, including their evolutions
@@ -95,7 +96,152 @@ const tooltip = d3.select("#grid")
 .style("border-radius", "5px")
 .style("padding", "10px")
 .style("position", "absolute")
+.style("user-select", "none")
 .style("z-index", 5)
+
+//CLICK-EVENT VARIABLES 
+var image_mouseclick = function(event, d) { 
+    //Click event for selecting a pokemon
+    var column = d3.selectAll(".square")
+    .filter(function(square) { return square.x === d.x && square.y == d.y; });
+    
+    //Transitions not working atm for some reason
+    column
+    .style("stroke", function() {
+        return d3.select(this).style("stroke") === "none" ? "#555" : "none";
+    })
+
+
+    if(d3.select(this).attr("selected") === "false") {
+        d3.select(this).attr("selected", "true")
+        shown_data.push(d.pokemon)
+    }
+    else {
+        d3.select(this).attr("selected", "false")
+        //Delete the pokemon from the array 
+        shown_data = shown_data.filter(function(pokemon) { return pokemon.name !== d.pokemon.name; })
+    }
+    update(shown_data)
+}
+
+var image_mouseover = function(event, d) { 
+    tooltip
+        .html(d.pokemon.name)
+        .style("opacity", 1)     
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY) - 30 + "px")
+    d3.select(this).transition()
+    .duration('50')
+    .attr('opacity', '.75')
+}
+
+var image_mouseout = function (event, d) {
+    tooltip
+        .style("opacity", 0)
+        .style("left", "0px")
+        .style("top",  "0px")
+    d3.select(this).transition()
+    .duration('50')
+    .attr('opacity', '1');
+}
+
+var image_mousemove = function(event, d) {
+    tooltip.style("transform","translateY(-55%)")
+    .style("left", (event.pageX) + "px")
+    .style("top", (event.pageY) - 30 + "px")
+}
+
+
+
+function filter_type() {
+    types = ["Bug", "Dragon", "Electric", "Fighting", "Fire", "Ghost", "Grass", "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Water"]
+
+    var filter_div = d3.select("#filter").attr("selected-type", "none")
+    for(let i = 0; i < types.length; i++) {
+        filter_div.append("img")
+        .attr("src", `assets/filter_icons/Pokemon_Type_Icon_${types[i]}.svg`)
+        .attr("class", "filter_icon")
+        .attr("type", types[i])
+        .attr("width", "50px")
+        .style("opacity", ".75")
+        // .style("border", "5px solid #555")
+        .style("border-radius", "100%")
+        .style("border", "none")
+        .on("click", function() {
+            var type = d3.select(this).attr("type")
+            var selected = d3.select(this).style("border")
+            d3.select(this).style("opacity", "1")
+            if(selected == "3px solid rgb(85, 85, 85)") {
+                filter_div.attr("selected-type", "none")
+                //Remove the filter
+                d3.select(this)
+                .style("border", "none")
+                .style("opacity", ".75")
+                //Turn the opacity down in the grid div for the pokémon that are not filtered out 
+                d3.selectAll(".image")
+                .filter((square) => {
+                    return square.pokemon.type[0].type.name.toLowerCase() !== type.toLowerCase()
+                })
+                .attr("opacity", 1)
+                .on("click", image_mouseclick)
+                .on("mouseover", image_mouseover)
+                .on("mousemove", image_mousemove)
+                .on("mouseout", image_mouseout)
+
+            } else {
+                //Add the filter
+
+                //Only allow one filter at a time
+                d3.selectAll(".filter_icon").style("border", "none")
+                d3.selectAll(".image")
+                .attr("opacity", 1)
+                .on("click", image_mouseclick)
+                .on("mouseover", image_mouseover)
+                .on("mousemove", image_mousemove)
+                .on("mouseout", image_mouseout)
+                
+                filter_div.attr("selected-type", type)
+
+                d3.select(this).style("border", "3px solid #555")
+                d3.selectAll(".image")
+                .filter((square) => {
+                    return square.pokemon.type[0].type.name.toLowerCase() !== type.toLowerCase()
+                })
+                .attr("opacity", 0.10)
+                .on("click", null)
+                .on("mouseover", null)
+                .on("mousemove", null)
+                .on("mouseout", null)
+
+            }
+        })
+        .on("mouseover", function(event, d) {
+        //Show tooltip with type
+        tooltip
+            .style("opacity", 1)
+            .html(d3.select(this).attr("type"))  
+            .style("left", (event.pageX) + "px")
+            .style("top", (event.pageY) - 30 + "px")
+            d3.select(this).transition()
+            .duration('100')
+            .style('opacity', '1')
+        })
+        .on("mousemove", image_mousemove)
+        .on("mouseout", function (event, d) {
+            border = d3.select(this).style("border")
+
+            tooltip
+                .style("opacity", 0)
+                .style("left", "0px")
+                .style("top",  "0px")
+            d3.select(this)
+            .style('opacity', border == "3px solid rgb(85, 85, 85)" ? 1 : 0.75);
+        })
+    }
+
+
+}
+
 
 //Function for initializing the grid
 function initgrid(num_rows, num_cols, pokemon_data, limit) {
@@ -148,7 +294,7 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     .attr("height", function(d) { return d.height; })
     .attr("pokemon", function(d) {return d.pokemon })
     .style("fill", "white")
-    .style("stroke-width", "1.5px")
+    .style("stroke-width", "2px")
     .style("stroke", "none")
     .style("rx", "8px")
     .style("ry", "8px")
@@ -164,77 +310,11 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     .attr("height", height-10)
     .attr("selected", "false")
     .attr("xlink:href", function(d) { return d.pokemon.img; })
-    .on("click", function(event, d) { 
-            //Click event for selecting a pokemon
-            var column = d3.selectAll(".square")
-            .filter(function(square) { return square.x === d.x && square.y == d.y; });
-            
-            //Transitions not working atm for some reason
-            column
-            .style("stroke", function() {
-                return d3.select(this).style("stroke") === "none" ? "black" : "none";
-            })
-            // .style("fill", function() { 
-            //     return d3.select(this).style("fill") === "white" ? "#ce2312" : "white"; 
-            // })
-            //These should be added before
-            .transition()
-            .duration(10)
-
-            
-            if(d3.select(this).attr("selected") === "false") {
-                d3.select(this).attr("selected", "true")
-                shown_data.push(d.pokemon)
-            }
-            else {
-                d3.select(this).attr("selected", "false")
-                //Delete the pokemon from the array 
-                shown_data = shown_data.filter(function(pokemon) { return pokemon.name !== d.pokemon.name; })
-            }
-            update(shown_data)
-    })
-    .on("mouseover", function(event, d) { 
-            tooltip
-                .html(d.pokemon.name)
-                .style("opacity", 1)     
-                .style("left", (event.pageX) + "px")
-                .style("top", (event.pageY) - 30 + "px")
-            d3.select(this).transition()
-            .duration('50')
-            .attr('opacity', '.75')
-        })
-    .on("mousemove", function(event, d) {
-        tooltip.style("transform","translateY(-55%)")
-        .style("left", (event.pageX) + "px")
-        .style("top", (event.pageY) - 30 + "px")
-    })
-    .on('mouseout', function (event, d) {
-        tooltip
-            .style("opacity", 0)
-            .style("left", "0px")
-            .style("top",  "0px")
-        d3.select(this).transition()
-        .duration('50')
-        .attr('opacity', '1');
-    })
+    .on("click", image_mouseclick)
+    .on("mouseover", image_mouseover)
+    .on("mousemove", image_mousemove)
+    .on('mouseout', image_mouseout)
     images.exit().remove()
-
-
-    //Initialize the graph with the first 3 pokemon and reflect it in the filling of the grid
-    // shown_data = pokemon_data.slice(0, 3)
-    // shown_data.forEach(function(pokemon) {
-    //     var column = d3.selectAll(".square")
-    //     .filter(function(square) { return square.pokemon.group === pokemon.group; });
-    //     column
-    //     .style("stroke", function() {
-    //         return d3.select(this).style("stroke") === "none" ? "black" : "none";
-    //     })
-        
-    //     var image = d3.selectAll(".image")
-    //     .filter(function(square) { return square.pokemon.group === pokemon.group; });
-    //     image
-    //     .attr("selected", "true")
-    // })   
 }
 
 function update_grid(sortBy) {
@@ -300,13 +380,37 @@ function update_grid(sortBy) {
         var column = d3.selectAll(".square")
         .filter(function(square) { return square.pokemon.name === pokemon.name; });
         column
-        .style("stroke", "black")
+        .style("stroke", "#555")
         
         var image = d3.selectAll(".image")
         .filter(function(square) { return square.pokemon.name === pokemon.name; });
         image
         .attr("selected", "true")
+
     })
+
+    //Ensure that filters move with the grid
+    d3.select("#grid")
+    .selectAll(".image")
+    .attr("opacity", 1)
+    .on("click", image_mouseclick)
+    .on("mouseover", image_mouseover)
+    .on("mousemove", image_mousemove)
+    .on("mouseout", image_mouseout)
+
+    var type = d3.select("#filter").attr("selected-type")
+    if(type !== "none") {
+        d3.select("#grid").selectAll(".image")
+        .filter(function(square) {
+            return square.pokemon.type[0].type.name.toLowerCase() !== type.toLowerCase()
+        })
+        .attr("opacity", 0.10)
+        .on("click", null)
+        .on("mouseover", null)
+        .on("mousemove", null)
+        .on("mouseout", null)
+    }
+
 }
 
 // Clear all data from the plot
@@ -326,70 +430,4 @@ function clear_data() {
     update(shown_data)   
 }
 
-
-// Updates the plot
-// function update(data) {
-    
-//     //Sort descending
-//     data.sort(function(b, a) {
-//         return a.value[0].base_stat - b.value[0].base_stat;
-//     });
-
-//     // Update the X axis
-//     x.domain(data.map(function(d) { return d.name; }))
-//     xAxis.call(d3.axisBottom(x))
-//         .selectAll("text")
-//         .attr("transform", "translate(-10,0)rotate(-45)")
-//         .style("text-anchor", "end")
-//         .attr("font-size", "15");
-
-//     // Update the Y axis
-//     y.domain([0, d3.max(data, function(d) { return d.value[0].base_stat }) ]);
-//     yAxis.transition().duration(1000).call(d3.axisLeft(y));
-
-//     // Create the u variable
-//     var u = svg.selectAll("rect")
-//         .data(data)
-
-//         u
-//         .enter()
-//         .append("rect") 
-//         .merge(u) 
-//         .attr("x", function(d) { return x(d.name); })
-//         .attr("y", function(d) { return y(d.value[0].base_stat); })
-//         .attr("width", x.bandwidth())
-//         .attr("height", function(d) { return height - y(d.value[0].base_stat); })
-//         .attr("fill", "#e95e39")
-//         .on("mouseover", function(event, d) { 
-//             const name = d.name
-//             const hp = d.value[0].base_stat
-//             tooltip
-//                 .html(d.name + "<br>" + "hp: " + hp)
-//                 .style("opacity", 1)
-//                 .style("left", (event.pageX) + "px")
-//                 .style("top", (event.pageY) - 30 + "px")
-//             d3.select(this).transition()
-//             .duration('50')
-//             .attr('opacity', '.75')
-//         })
-//         .on("mousemove", function(event, d) {
-//             tooltip.style("transform","translateY(-55%)")
-//             .style("left", (event.pageX) + "px")
-//             .style("top", (event.pageY) - 30 + "px")
-//         })
-//         .on('mouseout', function (event, d) {
-//             tooltip
-//                 .style("opacity", 0)
-//             d3.select(this).transition()
-//             .duration('50')
-//             .attr('opacity', '1');
-//         })
-        
-
-//     // If less group in the new dataset, delete the ones not in use anymore
-//     u
-//     .exit()
-//     .remove()
-// }
-
-
+filter_type()

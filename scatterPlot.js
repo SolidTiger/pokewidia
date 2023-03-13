@@ -23,6 +23,7 @@ function update(shown_data = null, pokemon_data = null) {
     if(shown_data != null) global_shown = shown_data;
 
     var delay = 1000
+
     // if (zoomed) {
     //     svg.transition().duration(1000)
     //         .call(zoom.transform, d3.zoomIdentity);
@@ -31,6 +32,7 @@ function update(shown_data = null, pokemon_data = null) {
     // zoomed = false;
     
     x.domain([0, d3.max(data, function (d) { return d[optionX]; }) + 9])
+
     xAxis.transition().duration(delay).call(d3.axisBottom(x));
 
     y.domain([0, d3.max(data, function (d) { return d[optionY]; }) + 10])

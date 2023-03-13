@@ -8,7 +8,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="type-style.css">
+    <!-- <link rel="stylesheet" href="type-style.css"> -->
     <title>Explore Pokémon</title>
 </head>
 <body>
@@ -28,12 +28,13 @@
         <select id="selectX"></select>
         <label for="dropdown">Y:</label>
         <select id="selectY"></select>
-        <div class="container">
+        <div>
             <!-- <div id="my_dataviz" style="text-align:center"></div> -->
-            <div class="left">
-            <div class="dropdown" >
-                    <button class="button" onclick="dropdown()">Sort By</button>
-                        <div id="sort_dropdown" class="dropdown-content">
+            <div>
+            <div class="dropdown">
+                    <button class="button" onclick="dropdown()">Sort By
+                    </button>
+                        <div id="sort_dropdown" class="dropdown-content" style="text-align:center;">
                             <a onclick="update_grid(0)">Pokédex No.</a>
                             <a onclick="update_grid(1)">HP</a>
                             <a onclick="update_grid(2)">Attack</a>
@@ -57,58 +58,10 @@
                     Descending
                 </label>
             </div> -->
-            <div id="grid" class="center"></div>
-            <div class ="right">
-                <h4>The following is for filtering by type, which grays out the irrelevant types in the grid. <br> Not implemented yet. Should probably be icons and not text. What do you think Mario? :)</h4>
-                <div class="t-type type-bug">
-                    <span class="t-type2 unselectable">Bug</span>
-                </div>
-                <div class="t-type type-dragon">
-                    <span class="t-type2 unselectable">Dragon</span>
-                </div>
-                <div class="t-type type-electric">
-                    <span class="t-type2 unselectable">Electric</span>
-                </div>
-                <div class="t-type type-fighting">
-                    <span class="t-type2 unselectable">Fighting</span>
-                </div>
-                <div class="t-type type-fire">
-                    <span class="t-type2 unselectable">Fire</span>
-                </div>
-                <div class="t-type type-flying">
-                    <span class="t-type2 unselectable">Flying</span>
-                </div>
-                <div class="t-type type-ghost">
-                    <span class="t-type2 unselectable">Ghost</span>
-                </div>
-                <div class="t-type type-grass">
-                    <span class="t-type2 unselectable">Grass</span>
-                </div>
-                <div class="t-type type-ground">
-                    <span class="t-type2 unselectable">Ground</span>
-                </div>
-                <div class="t-type type-ice">
-                    <span class="t-type2 unselectable">Ice</span>
-                </div>
-                <div class="t-type type-normal">
-                    <span class="t-type2 unselectable">Normal</span>
-                </div>
-                <div class="t-type type-poison">
-                    <span class="t-type2 unselectable">Poison</span>
-                </div>
-                <div class="t-type type-psychic">
-                    <span class="t-type2 unselectable">Psychic</span>
-                </div>
-                <div class="t-type type-rock">
-                    <span class="t-type2 unselectable">Rock</span>
-                </div>
-                <div class="t-type type-water">
-                    <span class="t-type2 unselectable">Water</span>
-                </div>
-            </div>
-        </div>
-        
+            <div id="grid"></div>
+            <div id="filter"></div>
 
+        </div>
     </div>
     <script type="text/javascript" src="pokemon_select.js"></script>
     <script type="text/javascript" src="scatterPlot.js"></script>
@@ -135,10 +88,12 @@
     <style>
         /* Styling unique for this HTML document */
         .dropdown-content {
+            border-radius: 10px;
             display: none;
             position: absolute;
+            transform: translateX(15px);
             background-color: #f1f1f1;
-            min-width: 160px;
+            min-width: 180px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
         }
@@ -148,13 +103,22 @@
             padding: 12px 16px;
             text-decoration: none;
             display: block;
+            user-select: none;
         }
 
         .show {
             display: block;
         }
 
-        .dropdown a:hover {background-color: #ddd;}
+        .dropdown {
+            display: inline-block;
+        }
+
+        .dropdown a:hover {
+            border-radius: 10px;
+            background-color: #ddd;
+        }
+
     </style>
 </body>
 
