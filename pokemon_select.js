@@ -399,16 +399,17 @@ function update_grid(sortBy) {
     .on("mouseout", image_mouseout)
 
     var type = d3.select("#filter").attr("selected-type")
-    
-    d3.select("#grid").selectAll(".image")
-    .filter(function(square) {
-        return square.pokemon.type[0].type.name.toLowerCase() !== type.toLowerCase()
-    })
-    .attr("opacity", 0.10)
-    .on("click", null)
-    .on("mouseover", null)
-    .on("mousemove", null)
-    .on("mouseout", null)
+    if(type !== "none") {
+        d3.select("#grid").selectAll(".image")
+        .filter(function(square) {
+            return square.pokemon.type[0].type.name.toLowerCase() !== type.toLowerCase()
+        })
+        .attr("opacity", 0.10)
+        .on("click", null)
+        .on("mouseover", null)
+        .on("mousemove", null)
+        .on("mouseout", null)
+    }
 
 }
 
