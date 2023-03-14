@@ -88,5 +88,9 @@ body {
     background-color: #e6c8ca;
 }
 table{
-    margin-left: 37%;
+    margin-left: 30%;
+}
+#pokemon_img{
+    width: 100px;
+    height: 100px;
 }
