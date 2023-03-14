@@ -77,6 +77,9 @@ async function update_teams() {
 factory = new PokemonFactory()
 
 factory.get_pokemons().then(function(pokemons) {
+    pokemons.sort(function(a, b) {
+        return a.name.localeCompare(b.name)
+    })
     for(var i = 0; i < 6; i++) {
         var element = document.getElementById("team_select_1_" + (i + 1))
         element.addEventListener("change", update_teams)
@@ -84,12 +87,12 @@ factory.get_pokemons().then(function(pokemons) {
         element2.addEventListener("change", update_teams)
         for(var j = 0; j < pokemons.length; j++) {
             var option = document.createElement("option")
-            option.text = pokemons[j].name
+            option.text = pokemons[j].name.slice(0, 1).toUpperCase() + pokemons[j].name.slice(1)
             option.value = pokemons[j].name
             element.add(option)
 
             var option2 = document.createElement("option")
-            option2.text = pokemons[j].name
+            option2.text = pokemons[j].name.slice(0, 1).toUpperCase() + pokemons[j].name.slice(1)
             option2.value = pokemons[j].name
             element2.add(option2)
         }

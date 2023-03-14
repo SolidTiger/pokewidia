@@ -32,7 +32,7 @@ body {
 }
 
 .button {
-  background-color: #ce2312; /* Green */
+  background-color: #ce4639; /* Green */
   border: solid #585a5e;
   color: #dbe6fa;
   padding: 15px 32px;
@@ -47,11 +47,11 @@ body {
 
 
 .button:hover {
-    background-color: #e95e39; /* Darker */
+    background-color: #e97b5d; /* Darker */
 }
 
 .button:active {
-    background-color: #e95e39; 
+    background-color: #e97b5d; 
     color: #536eb5;
     border: solid #0c0e14;
 }   
