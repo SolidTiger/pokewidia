@@ -132,7 +132,7 @@ body {
 
 table{
 
-    margin-left: 30%;
+    margin-left: auto;
 }
 #pokemon_img{
     width: 100px;
