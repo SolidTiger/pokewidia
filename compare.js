@@ -165,7 +165,7 @@ async function showList(){
                 attack = team_1[i] +" ["+ type1+"] "+ " is neutral against " + team_2[i] +" ["+ type2 +"]";
             }
 
-            var table = d3.select("table").append("tr").html("<td><img src = " + pokemon1.image +"></img></td><td>"+attack+"</td><td><img src = "+ pokemon2.image+"></img></td>");
+            var table = d3.select("table").append("tr").html("<td><img id = 'pokemon_img' src = " + pokemon1.image +"></img></td><td>"+attack+"</td><td><img id = 'pokemon_img' src = "+ pokemon2.image+"></img></td>");
     
         } catch (error) {
             var div = d3.select("#compare").append("h1").html("Select both teams fully");
