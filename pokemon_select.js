@@ -151,6 +151,45 @@ var image_mousemove = function(event, d) {
     .style("top", (event.pageY) - 30 + "px")
 }
 
+var sort_grid = d3.select("#sort_dropdown")
+    .selectAll("img")
+    .attr("selected", "false")
+    .style("border", "none")
+    .style("border-radius", "100%")
+    .on("click", function() {
+        var selected = d3.select(this).attr("selected")
+
+        if (selected != "true") { 
+            sort_grid.
+            style("border", "none")
+            .attr("selected", "false")
+
+            d3.select(this)
+            .style("border", "5px solid #555")
+            .attr("selected", "true")
+        }
+    })
+    .on("mouseover", function(event, d) {
+        tooltip
+        .html(d3.select(this).attr("name"))
+        .style("opacity", 1)     
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY) - 30 + "px")
+        d3.select(this).transition()
+        .duration('50')
+        .attr('opacity', '.75')
+    })
+    .on("mouseout", image_mouseout)
+    .on("mousemove", image_mousemove)
+
+d3.select("#sort_dropdown")
+.selectAll("img")
+.filter(function () {
+    return d3.select(this).attr("name") === "Pokédex ID"
+})
+.attr("selected", "true")
+.style("border", "5px solid #555")
+
 
 
 function filter_type() {
@@ -171,7 +210,7 @@ function filter_type() {
             var type = d3.select(this).attr("type")
             var selected = d3.select(this).style("border")
             d3.select(this).style("opacity", "1")
-            if(selected == "3px solid rgb(85, 85, 85)") {
+            if(selected == "5px solid rgb(85, 85, 85)") {
                 filter_div.attr("selected-type", "none")
                 //Remove the filter
                 d3.select(this)
@@ -202,7 +241,7 @@ function filter_type() {
                 
                 filter_div.attr("selected-type", type)
 
-                d3.select(this).style("border", "3px solid #555")
+                d3.select(this).style("border", "5px solid #555")
                 d3.selectAll(".image")
                 .filter((square) => {
                     return square.pokemon.type[0].type.name.toLowerCase() !== type.toLowerCase()
@@ -235,7 +274,7 @@ function filter_type() {
                 .style("left", "0px")
                 .style("top",  "0px")
             d3.select(this)
-            .style('opacity', border == "3px solid rgb(85, 85, 85)" ? 1 : 0.75);
+            .style('opacity', border == "5px solid rgb(85, 85, 85)" ? 1 : 0.75);
         })
     }
 

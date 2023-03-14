@@ -32,7 +32,7 @@ body {
 }
 
 .button {
-  background-color: #ce2312; /* Green */
+  background-color: #ce4639; /* Green */
   border: solid #585a5e;
   color: #dbe6fa;
   padding: 15px 32px;
@@ -47,11 +47,11 @@ body {
 
 
 .button:hover {
-    background-color: #e95e39; /* Darker */
+    background-color: #e97b5d; /* Darker */
 }
 
 .button:active {
-    background-color: #e95e39; 
+    background-color: #e97b5d; 
     color: #536eb5;
     border: solid #0c0e14;
 }   
@@ -87,7 +87,51 @@ body {
 .background{
     background-color: #e6c8ca;
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.filter_icon {
+    position: relative; 
+    left: 34px;
+    top: -20px; 
+    margin-right: 10px;
+    
+}
+
+.filter-background {
+    position: relative;
+    background-color:  #ffb396;
+    border-radius: 25px;
+    width: 900px;
+    height: 100px; 
+    left:-450px;
+    top: -20px;
+    box-shadow: 2.5px 5px #888888;
+}
+
+.sort {
+    position: relative;
+    background-color: #ffb396; 
+    border-radius: 25px;
+    height: 100px; 
+    width:420px;
+    left: -670px;
+    top: 10px; 
+    box-shadow: 2.5px 5px #888888;
+}
+
+.sort-element {
+    position: relative;
+    margin-right: 9px;
+    top: -20px;
+    left: 24px;
+}
+
 table{
+
     margin-left: 30%;
 }
 #pokemon_img{
