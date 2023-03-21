@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <!-- <link rel="stylesheet" href="type-style.css"> -->
     <title>Explore Pokémon</title>
 </head>
 <body>
@@ -27,31 +25,23 @@
         <div id="scatterPlot" class="scatter">
             <div style="position: absolute;">
                 <select id="selectY" style="position: relative; top: 9px; left: 71px; z-index:1;"></select>
-                <select id="selectX" style="position: relative; top: 745px; left: 696px; z-index:1;"></select> 
+                <select id="selectX" style="position: relative; top: 745px; left: 733px; z-index:1;"></select> 
             </div>
         </div>
     </div>
     <div class="center">
         <div id="filter" class="filter-background">
-            <div style="font-size:35px; position:relative; top:-20px; left:25px; font-weight:500;">Filter</div>
+            <div style="font-size:35px; position:relative; top:-20px; left:25px; font-weight:500; user-select: none;">Filter
+                <img src="assets/question-mark.svg" style="width:25px; position:relative; top:0px; left:-1px" class="question-mark" name="filter"></img>
+            </div>
+            
         </div>
     </div>
     <div class="center">    
-        <!-- <div class="dropdown">
-                <button class="button" onclick="dropdown()">Sort By
-                </button>
-                    <div id="sort_dropdown" class="dropdown-content" style="text-align:center;">
-                        <a onclick="update_grid(0)">Pokédex No.</a>
-                        <a onclick="update_grid(1)">HP</a>
-                        <a onclick="update_grid(2)">Attack</a>
-                        <a onclick="update_grid(3)">Defense</a>
-                        <a onclick="update_grid(4)">Speed</a>
-                        <a onclick="update_grid(5)">Special</a>
-                    </div>
-            </div>
-        </div>         -->
         <div id="sort_dropdown" class="sort">
-            <div style="font-size:35px; position:relative; top:-20px; left:25px; font-weight:500;">Sort</div>
+            <div style="font-size:35px; position:relative; top:-20px; left:25px; font-weight:500; user-select: none;">Sort
+                <img src="assets/question-mark.svg" style="width:25px; position:relative; top:0px; left:-1px" class="question-mark" name="sort"></img>
+            </div>
             <img src="assets/sort_icons/0.svg" name="Pokédex ID" width="51" onclick="update_grid(0)" class="sort-element">
             <img src="assets/sort_icons/1.svg" name="Hit Point" width="51" onclick="update_grid(1)" class="sort-element">
             <img src="assets/sort_icons/2.svg" name="Attack" width="51" onclick="update_grid(2)" class="sort-element">
@@ -76,65 +66,10 @@
         
     </div>
     <div class="center">
-        <button type="button" class="button" onclick="clear_data()" style="position:relative; top:-75px; left: -275px;">Clear All</button>
+        <button type="button" class="button" onclick="clear_data()" style="position:relative; top:-75px; left: -275px; box-shadow: 2px 3px #888888;">Clear All</button>
     </div>
     <script type="text/javascript" src="pokemon_select.js"></script>
     <script type="text/javascript" src="scatterPlot.js"></script>
-    <!-- <script>
-        /**------------------------
-         * Script for dropdown menu
-         * ------------------------
-        **/
-        function dropdown() {
-          document.getElementById("sort_dropdown").classList.toggle("show");    
-        }
-        
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(e) {
-          if (!e.target.matches('.button')) {
-          var myDropdown = document.getElementById("sort_dropdown");
-            if (myDropdown.classList.contains('show')) {
-              myDropdown.classList.remove('show');
-            }
-          }
-        }
-
-    </script> -->
-    <!-- <style>
-        /* Styling unique for this HTML document */
-        .dropdown-content {
-            border-radius: 10px;
-            display: none;
-            position: absolute;
-            transform: translateX(15px);
-            background-color: #f1f1f1;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            user-select: none;
-        }
-
-        .show {
-            display: block;
-        }
-
-        .dropdown {
-            display: inline-block;
-        }
-
-        .dropdown a:hover {
-            border-radius: 10px;
-            background-color: #ddd;
-        }
-
-    </style> -->
 </body>
 
 </html>
