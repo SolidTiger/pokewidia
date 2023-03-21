@@ -138,11 +138,17 @@ footer{
     left: 24px;
 }
 
-table{
 
-    margin-left: auto;
-}
 #pokemon_img{
     width: 100px;
     height: 100px;
+}
+
+.th1{
+    float: left;
+    font-size: xxx-large;
+}
+.th2{
+    float: initial;
+    font-size: xxx-large;
 }
