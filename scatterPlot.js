@@ -5,12 +5,6 @@ var data = JSON.parse(sessionStorage.getItem("pokemon_data"));
 var global_shown = null;
 var zoomed = false;
 
-// var k = d3.event.transform.k;
-
-// console.log(data)
-// var data = pokemon_data
-
-
 // A function that update the chart
 function update(shown_data = null, pokemon_data = null) {
 
@@ -23,13 +17,6 @@ function update(shown_data = null, pokemon_data = null) {
     if(shown_data != null) global_shown = shown_data;
 
     var delay = 1000
-
-    // if (zoomed) {
-    //     svg.transition().duration(1000)
-    //         .call(zoom.transform, d3.zoomIdentity);
-    //     delay = 0
-    // }
-    // zoomed = false;
     
     x.domain([0, d3.max(data, function (d) { return d[optionX]; }) + 9])
 
@@ -49,7 +36,6 @@ function update(shown_data = null, pokemon_data = null) {
         .style("fill", color)
         .style("opacity", transparent)
         .on("mouseover", function(event, d) {
-            // d3.select(this).style("opacity", opace)
             tooltip
                 .html(d.name)
                 .style("opacity", 1)     
@@ -65,7 +51,6 @@ function update(shown_data = null, pokemon_data = null) {
             .style("top", (event.pageY) - 30 + "px")
         })
         .on('mouseout', function (event, d) {
-            // d3.select(this).style("opacity", transparent)
             tooltip
                 .style("opacity", 0)
                 .style("left", "0px")
@@ -99,9 +84,6 @@ function update(shown_data = null, pokemon_data = null) {
             }
         })
 
-        
-    // circles.exit().remove();
-
     circles
         .transition()
         .duration(1000)
@@ -112,7 +94,6 @@ function update(shown_data = null, pokemon_data = null) {
         .style("fill", color)
         .style("opacity", transparent)
         
-    
     if(shown_data != null) {
         shown_data.forEach(element => {
             scatter
@@ -147,8 +128,6 @@ function updateChart({transform}) {
 var margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 935 - margin.left - margin.right,
     height = 805 - margin.top - margin.bottom;
-
-// CODE STARTS HERE
 
 // append the svg object to the body of the page
 var svg = d3.select("#scatterPlot")
@@ -196,6 +175,7 @@ var xAxis = svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x))
     .style("user-select", "none")
+    .style("font-size", "16px")
 
 // Add Y axis
 var y = d3.scaleLinear()
@@ -204,6 +184,7 @@ var y = d3.scaleLinear()
 var yAxis = svg.append("g")
     .call(d3.axisLeft(y))
     .style("user-select", "none")
+    .style("font-size", "16px")
 
 var radius = 7.5
 var color = "#e97b5d"

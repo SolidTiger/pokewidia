@@ -289,8 +289,8 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     var ypos = 1; 
     var width = 60; 
     var height = 60;
-    var x_offset = 5;
-    var y_offset = 5; 
+    var x_offset = 6;
+    var y_offset = 6; 
     
     for(let row = 0; row < num_rows; row++) {
         gridData.push(new Array());
@@ -337,6 +337,7 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     .style("stroke", "none")
     .style("rx", "8px")
     .style("ry", "8px")
+    .style("filter", "drop-shadow(2px 2px 2px rgb(0 0 0 / 0.4)")
 
     //The pokemon images
     var images = row.selectAll(".image")
