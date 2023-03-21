@@ -213,7 +213,7 @@ var sort_grid = d3.select("#sort_dropdown")
     var question_mark = d3.selectAll("img")
     .filter(function() { return d3.select(this).attr("class") === "question-mark"; })
     .on("mouseover", function(event, d) {
-        var filter_text = (d3.select(this).attr("name") === "filter" ? "Filter by <em>type</em>" : "Sort the grid <em>row-wise</em> by <em>stats</em> in descending order") 
+        var filter_text = (d3.select(this).attr("name") === "filter" ? "Filter by <em>primary type</em>" : "Sort the grid <em>row-wise</em> by <em>stats</em> in descending order") 
 
         tooltip
         .html(filter_text)
