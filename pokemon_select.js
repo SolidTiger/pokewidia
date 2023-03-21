@@ -98,6 +98,7 @@ const tooltip = d3.select("#grid")
 .style("position", "absolute")
 .style("user-select", "none")
 .style("z-index", 5)
+.style("font-size", "16px")
 
 //CLICK-EVENT VARIABLES 
 var image_mouseclick = function(event, d) { 
@@ -126,10 +127,19 @@ var image_mouseclick = function(event, d) {
 
 var image_mouseover = function(event, d) { 
     tooltip
-        .html(d.pokemon.name)
+        .html("<b>" + d.pokemon.name + "</b>" + "<br>" + "Pokédex No. " + d.pokemon.id + "<br>" 
+                + "Type: " + d.pokemon.type[0].type.name.charAt(0).toUpperCase() 
+                + d.pokemon.type[0].type.name.substring(1)
+                + (d.pokemon.type[1] ? "/" + d.pokemon.type[1].type.name.charAt(0).toUpperCase() + d.pokemon.type[1].type.name.substring(1) : "")
+                + "<br>" + "HP: " + d.pokemon.hp 
+                + "<br>" + "Attack: " + d.pokemon.attack 
+                + "<br>" + "Defense: " + d.pokemon.defense 
+                + "<br>" + "Speed: " + d.pokemon.speed 
+                + "<br>" + "Special: " + d.pokemon.specialAttack
+        )
         .style("opacity", 1)     
-        .style("left", (event.pageX) + "px")
-        .style("top", (event.pageY) - 30 + "px")
+        .style("left", (event.pageX) + 5 + "px")
+        .style("top", (event.pageY) - 80 + "px")
     d3.select(this).transition()
     .duration('50')
     .attr('opacity', '.75')
@@ -147,15 +157,23 @@ var image_mouseout = function (event, d) {
 
 var image_mousemove = function(event, d) {
     tooltip.style("transform","translateY(-55%)")
+    .style("left", (event.pageX) + 5 + "px")
+    .style("top", (event.pageY) - 80 + "px")
+}
+
+var general_mousemove = function(event, d) {
+    tooltip.style("transform","translateY(-55%)")
     .style("left", (event.pageX) + "px")
     .style("top", (event.pageY) - 30 + "px")
 }
+
 
 var sort_grid = d3.select("#sort_dropdown")
     .selectAll("img")
     .attr("selected", "false")
     .style("border", "none")
     .style("border-radius", "100%")
+    .style("cursor", "pointer")
     .on("click", function() {
         var selected = d3.select(this).attr("selected")
 
@@ -175,12 +193,20 @@ var sort_grid = d3.select("#sort_dropdown")
         .style("opacity", 1)     
         .style("left", (event.pageX) + "px")
         .style("top", (event.pageY) - 30 + "px")
-        d3.select(this).transition()
-        .duration('50')
-        .attr('opacity', '.75')
+        
+        d3.select(this)
+        .style("filter", "drop-shadow(3px 3px 3px rgb(0 0 0 / 0.4)")
     })
-    .on("mouseout", image_mouseout)
-    .on("mousemove", image_mousemove)
+    .on("mouseout", function(event, d) {
+        tooltip
+        .style("opacity", 0)
+        .style("left", "0px")
+        .style("top",  "0px")
+
+        d3.select(this)
+        .style("filter", "none")
+    })
+    .on("mousemove", general_mousemove)
 
 d3.select("#sort_dropdown")
 .selectAll("img")
@@ -189,6 +215,7 @@ d3.select("#sort_dropdown")
 })
 .attr("selected", "true")
 .style("border", "5px solid #555")
+
 
 
 
@@ -202,20 +229,20 @@ function filter_type() {
         .attr("class", "filter_icon")
         .attr("type", types[i])
         .attr("width", "50px")
-        .style("opacity", ".75")
         // .style("border", "5px solid #555")
         .style("border-radius", "100%")
         .style("border", "none")
+        .style("cursor", "pointer")
         .on("click", function() {
             var type = d3.select(this).attr("type")
             var selected = d3.select(this).style("border")
-            d3.select(this).style("opacity", "1")
+
             if(selected == "5px solid rgb(85, 85, 85)") {
                 filter_div.attr("selected-type", "none")
                 //Remove the filter
                 d3.select(this)
                 .style("border", "none")
-                .style("opacity", ".75")
+
                 //Turn the opacity down in the grid div for the pokémon that are not filtered out 
                 d3.selectAll(".image")
                 .filter((square) => {
@@ -226,6 +253,7 @@ function filter_type() {
                 .on("mouseover", image_mouseover)
                 .on("mousemove", image_mousemove)
                 .on("mouseout", image_mouseout)
+                .style("cursor", "pointer")
 
             } else {
                 //Add the filter
@@ -238,6 +266,7 @@ function filter_type() {
                 .on("mouseover", image_mouseover)
                 .on("mousemove", image_mousemove)
                 .on("mouseout", image_mouseout)
+                .style("cursor", "pointer")
                 
                 filter_div.attr("selected-type", type)
 
@@ -251,21 +280,22 @@ function filter_type() {
                 .on("mouseover", null)
                 .on("mousemove", null)
                 .on("mouseout", null)
+                .style("cursor", "default")
 
             }
         })
         .on("mouseover", function(event, d) {
         //Show tooltip with type
-        tooltip
+            tooltip
             .style("opacity", 1)
             .html(d3.select(this).attr("type"))  
             .style("left", (event.pageX) + "px")
             .style("top", (event.pageY) - 30 + "px")
-            d3.select(this).transition()
-            .duration('100')
-            .style('opacity', '1')
+
+            d3.select(this)
+            .style("filter", "drop-shadow(3px 3px 3px rgb(0 0 0 / 0.4)")
         })
-        .on("mousemove", image_mousemove)
+        .on("mousemove", general_mousemove)
         .on("mouseout", function (event, d) {
             border = d3.select(this).style("border")
 
@@ -273,14 +303,14 @@ function filter_type() {
                 .style("opacity", 0)
                 .style("left", "0px")
                 .style("top",  "0px")
+
             d3.select(this)
-            .style('opacity', border == "5px solid rgb(85, 85, 85)" ? 1 : 0.75);
+            .style("filter", "none")
         })
     }
 
 
 }
-
 
 //Function for initializing the grid
 function initgrid(num_rows, num_cols, pokemon_data, limit) {
@@ -350,6 +380,7 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     .attr("height", height-10)
     .attr("selected", "false")
     .attr("xlink:href", function(d) { return d.pokemon.img; })
+    .style("cursor", "pointer")
     .on("click", image_mouseclick)
     .on("mouseover", image_mouseover)
     .on("mousemove", image_mousemove)

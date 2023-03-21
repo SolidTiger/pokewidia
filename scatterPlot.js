@@ -33,8 +33,10 @@ function update(shown_data = null, pokemon_data = null) {
         .attr("cx", function(d) { return x(d[optionX]); })
         .attr("cy", function(d) { return y(d[optionY]); })
         .attr("r", radius)
+        .style("cursor", "pointer")
         .style("fill", color)
         .style("opacity", transparent)
+        .style("filter", "drop-shadow(2px 2px 2px rgb(0 0 0 / 0.4)")
         .on("mouseover", function(event, d) {
             tooltip
                 .html(d.name)
@@ -140,32 +142,65 @@ var svg = d3.select("#scatterPlot")
 
 // List of groups
 var allGroup = ["id", "hp", "attack", "defense", "speed", "specialAttack"]
+var displayNames = ["ID", "HP", "Attack", "Defense", "Speed", "Special"];
 
 var optionX = "id"
 var optionY = "hp"
 
 // add the options to the button
+// d3.select("#selectX")
+//     .selectAll('myOptions')
+//     .data(allGroup)
+//     .enter()
+//     .append('option')
+//     .text(function (d) { return d; }) // text showed in the menu
+//     .attr("value", function (d) { return d; }) // corresponding value returned by the button
+
 d3.select("#selectX")
-    .selectAll('myOptions')
-    .data(allGroup)
-    .enter()
-    .append('option')
-    .text(function (d) { return d; }) // text showed in the menu
-    .attr("value", function (d) { return d; }) // corresponding value returned by the button
+  .selectAll('myOptions')
+  .data(allGroup)
+  .enter()
+  .append('option')
+  .text(function(d) { 
+    // Get the index of the current data value in allGroup
+    const index = allGroup.indexOf(d);
+    // Use the corresponding display name from displayNames
+    return displayNames[index];
+  }) // text showed in the menu
+  .attr("value", function(d) { return d; }) // corresponding value returned by the button
 
 d3.select("#selectX")
     .property("value", optionX)
+    .style("font-size", "16px")
+    .style("user-select", "none")
+    .style("filter", "drop-shadow(2px 2px 2px rgb(0 0 0 / 0.4)")
+
+// d3.select("#selectY")
+//     .selectAll('myOptions')
+//     .data(allGroup)
+//     .enter()
+//     .append('option')
+//     .text(function (d) { return d; }) // text showed in the menu
+//     .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
 d3.select("#selectY")
-    .selectAll('myOptions')
-    .data(allGroup)
-    .enter()
-    .append('option')
-    .text(function (d) { return d; }) // text showed in the menu
-    .attr("value", function (d) { return d; }) // corresponding value returned by the button
+  .selectAll('myOptions')
+  .data(allGroup)
+  .enter()
+  .append('option')
+  .text(function(d) { 
+    // Get the index of the current data value in allGroup
+    const index = allGroup.indexOf(d);
+    // Use the corresponding display name from displayNames
+    return displayNames[index];
+  }) // text showed in the menu
+  .attr("value", function(d) { return d; }) // corresponding value returned by the button
 
 d3.select("#selectY")
     .property("value", optionY)
+    .style("font-size", "16px")
+    .style("user-select", "none")
+    .style("filter", "drop-shadow(2px 2px 2px rgb(0 0 0 / 0.4)")
 
 // Add X axis
 var x = d3.scaleLinear()
@@ -176,6 +211,8 @@ var xAxis = svg.append("g")
     .call(d3.axisBottom(x))
     .style("user-select", "none")
     .style("font-size", "16px")
+    .style("stroke-width", "1px")
+    .style("filter", "drop-shadow(2px 2px 2px rgb(0 0 0 / 0.4)")
 
 // Add Y axis
 var y = d3.scaleLinear()
@@ -185,6 +222,8 @@ var yAxis = svg.append("g")
     .call(d3.axisLeft(y))
     .style("user-select", "none")
     .style("font-size", "16px")
+    .style("stroke-width", "1px")
+    .style("filter", "drop-shadow(2px 2px 2px rgb(0 0 0 / 0.4)")
 
 var radius = 7.5
 var color = "#e97b5d"
