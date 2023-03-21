@@ -144,26 +144,20 @@ async function showList(){
     var switchTeam = d3.select(".center").selectAll("#switchBtn.button").remove();
     var table2 = d3.select("table2").selectAll("*").remove();
     var h1 = d3.select("#compare").selectAll("h1").remove();
-    var switchTeam = d3.select(".center").append("button").attr("id","switchBtn")
-        .attr("class","button")
-        .on("click", function(){
-            var temp = team_1
-            team_1 = team_2
-            team_2 = temp
-            showList()
-        })
-        .html("switch Attacking team!");
+    
     //var table = d3.select("#compare").append("table");
-    table = await d3.select("table").html("<th class = 'th1'>Attacking</th><th class = 'th2'>Defending</th>")
-    for(var i = 0; i< 6 ;i ++){
-        try {
+    
+    try {
+        table = await d3.select("table").html("<th class = 'th1'>Attacking</th><th class = 'th2'>Defending</th>")
+        for(var i = 0; i< 6 ;i ++){
+            
             pokemon1 = await factory.get_pokemon(team_1[i]);
             pokemon2 = await factory.get_pokemon(team_2[i]);
             var attack ="";
             var dmg = await compareType(team_1[i], team_2[i]);
             type1 = pokemon1.type;
             type2 = pokemon2.type;
-           
+        
             if( dmg == 0){
                 attack = team_1[i] + " ["+ type1+"] "+ " deals no dmg to " + team_2[i] +" ["+ type2 +"]";
             }
@@ -187,11 +181,23 @@ async function showList(){
                 .append("td").append("button").attr("disabled",true)
                 .html("<img id = 'pokemon_img' src = " + pokemon2.image +"></img>");
 
-        } catch (error) {
-            div = d3.select("#compare").append("h1").html("Select both teams fully");
-            break
+            
         }
+        
+        var switchTeam = d3.select(".center").append("button").attr("id","switchBtn")
+        .attr("class","button")
+        .on("click", function(){
+            var temp = team_1
+            team_1 = team_2
+            team_2 = temp
+            showList()
+        })
+        .html("switch Attacking team!");
+    } catch (error) {
+        var table = d3.select("table").selectAll("*").remove();
+        div = d3.select("#compare").append("h1").html("Select both teams fully");
     }
+    
     //console.log(nodes)
     //console.log(links)
     //createGraph();
