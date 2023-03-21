@@ -1,7 +1,8 @@
-var fighting_list;
-var graph;
-var nodes;
-var links;
+var pokemon1;
+var pokemon2;
+var type1;
+var type2;
+
 async function compare(){
     var dmg;  
     graph = {nodes:[], links:[]}
@@ -140,17 +141,28 @@ async function showList(){
     //nodes, links = await compare();
     
     var table = d3.select("table").selectAll("*").remove();
+    var switchTeam = d3.select(".center").selectAll("#switchBtn.button").remove();
+    var table2 = d3.select("table2").selectAll("*").remove();
     var h1 = d3.select("#compare").selectAll("h1").remove();
-    var table = d3.select("#compare").append("table");
-
+    var switchTeam = d3.select(".center").append("button").attr("id","switchBtn")
+        .attr("class","button")
+        .on("click", function(){
+            var temp = team_1
+            team_1 = team_2
+            team_2 = temp
+            showList()
+        })
+        .html("switch Attacking team!");
+    //var table = d3.select("#compare").append("table");
+    table = await d3.select("table").html("<th class = 'th1'>Attacking</th><th class = 'th2'>Defending</th>")
     for(var i = 0; i< 6 ;i ++){
         try {
-            var pokemon1 = await factory.get_pokemon(team_1[i]);
-            var pokemon2 = await factory.get_pokemon(team_2[i]);
+            pokemon1 = await factory.get_pokemon(team_1[i]);
+            pokemon2 = await factory.get_pokemon(team_2[i]);
             var attack ="";
             var dmg = await compareType(team_1[i], team_2[i]);
-            var type1 = pokemon1.type;
-            var type2 = pokemon2.type;
+            type1 = pokemon1.type;
+            type2 = pokemon2.type;
            
             if( dmg == 0){
                 attack = team_1[i] + " ["+ type1+"] "+ " deals no dmg to " + team_2[i] +" ["+ type2 +"]";
@@ -164,11 +176,19 @@ async function showList(){
             } else{
                 attack = team_1[i] +" ["+ type1+"] "+ " is neutral against " + team_2[i] +" ["+ type2 +"]";
             }
+            table = await d3.select("table").append("tr");
 
-            var table = d3.select("table").append("tr").html("<td><img id = 'pokemon_img' src = " + pokemon1.image +"></img></td><td>"+attack+"</td><td><img id = 'pokemon_img' src = "+ pokemon2.image+"></img></td>");
-    
+            table = await d3.select("table")
+                .append("td").style("float","left")
+                .append("button").attr("id",pokemon1.name).on("click", function(){fightAll(this.id)}).html("<img id = 'pokemon_img' src = " + pokemon1.image +"></img>");
+            
+            table = await d3.select("table").append("td").style("float","left").append("f").html(attack);
+            table = await d3.select("table")
+                .append("td").append("button").attr("disabled",true)
+                .html("<img id = 'pokemon_img' src = " + pokemon2.image +"></img>");
+
         } catch (error) {
-            var div = d3.select("#compare").append("h1").html("Select both teams fully");
+            div = d3.select("#compare").append("h1").html("Select both teams fully");
             break
         }
     }
@@ -183,6 +203,46 @@ class fight{
         this.deffending = deffending;
         this.power = power; 
     }
+}
+
+async function fightAll(name){
+    try {
+        var table = d3.select("table").selectAll("*").remove();
+        var table2 = d3.select("table2").selectAll("*").remove();
+        //var table2 = d3.select("#compare").append("table2").attr("class",table);
+        console.log(name);
+        for(var i = 0; i < 6 ; i++){
+            
+            pokemon2 = await factory.get_pokemon(team_2[i]);
+            
+            pokemon1 = await factory.get_pokemon(name);
+            var dmg = await compareType(pokemon1.name, pokemon2.name);
+
+            var type1 = pokemon1.type;
+            var type2 = pokemon2.type;
+
+            if( dmg == 0){
+                attack = pokemon1.name + " ["+ type1+"] "+ " deals no dmg to " + pokemon2.name +" ["+ type2 +"]";
+            }
+            else if(dmg < 1){
+                attack = pokemon1.name + " ["+ type1+"] "+" is weak against " + pokemon2.name +" ["+ type2 +"]";
+            }
+            else if(dmg > 1){
+                attack = pokemon1.name +" ["+ type1+"] "+ " is strong against " + pokemon2.name+" ["+ type2 +"]";
+                
+            } else{
+                attack = pokemon1.name +" ["+ type1+"] "+ " is neutral against " + pokemon2.name +" ["+ type2 +"]";
+            }
+
+            table2 = d3.select("table2").append("tr").html("<td><img id = 'pokemon_img' src = " + pokemon1.image +"></img></td><td>"+attack+"</td><td><img id = 'pokemon_img' src = "+ pokemon2.image+"></img></td>");
+        
+        }
+
+        table2 = d3.select("table2").append("div").attr("class","center").html("<button class='button' onclick='showList()'>Back</button>");
+    } catch (error) {
+        console.log(error)
+    }
+    
 }
 
 async function compareType(attack, defense){
