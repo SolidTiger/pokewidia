@@ -33,7 +33,6 @@ body {
 
 .button {
   background-color: #ce4639; /* Green */
-  border: solid #585a5e;
   color: #dbe6fa;
   padding: 15px 32px;
   text-align: center;
@@ -43,6 +42,8 @@ body {
   width: 208px;
   margin: 10px 10px 0px 0px; 
   transition-duration: 0.4s;
+  border-radius: 10px 10px;
+  border: none;
 }
 
 

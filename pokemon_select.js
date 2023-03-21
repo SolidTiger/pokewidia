@@ -167,9 +167,10 @@ var general_mousemove = function(event, d) {
     .style("top", (event.pageY) - 30 + "px")
 }
 
-
+//SORT GRID
 var sort_grid = d3.select("#sort_dropdown")
     .selectAll("img")
+    .filter(function() { return d3.select(this).attr("class") === "sort-element"; })
     .attr("selected", "false")
     .style("border", "none")
     .style("border-radius", "100%")
@@ -207,6 +208,27 @@ var sort_grid = d3.select("#sort_dropdown")
         .style("filter", "none")
     })
     .on("mousemove", general_mousemove)
+
+    //HOVER ON QUESTION MARK
+    var question_mark = d3.selectAll("img")
+    .filter(function() { return d3.select(this).attr("class") === "question-mark"; })
+    .on("mouseover", function(event, d) {
+        var filter_text = (d3.select(this).attr("name") === "filter" ? "Filter by <em>type</em>" : "Sort the grid <em>row-wise</em> by <em>stats</em> in descending order") 
+
+        tooltip
+        .html(filter_text)
+        .style("opacity", 1)
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY) - 30 + "px")
+    })
+    .on("mouseout", function(event, d) {
+        tooltip
+        .style("opacity", 0)
+        .style("left", "0px")
+        .style("top",  "0px")
+    })
+    .on("mousemove", general_mousemove)
+
 
 d3.select("#sort_dropdown")
 .selectAll("img")
@@ -363,7 +385,7 @@ function initgrid(num_rows, num_cols, pokemon_data, limit) {
     .attr("height", function(d) { return d.height; })
     .attr("pokemon", function(d) {return d.pokemon })
     .style("fill", "white")
-    .style("stroke-width", "2px")
+    .style("stroke-width", "2.5px")
     .style("stroke", "none")
     .style("rx", "8px")
     .style("ry", "8px")
